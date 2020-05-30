@@ -20,20 +20,20 @@
     var CONFIG = {"hostname":"wxyy97.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="hexo -clean; hexo g; hexo s;">
+  <meta name="description" content="对象单例设计：设计类时保证类的实例在类内存中只有一份。 1）内部设计实现（对类自身进行设计） 2）外部设计实现（对类的对象提供一种池）">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hexo command">
-<meta property="og:url" content="http://wxyy97.com/2020/04/17/Hexo%20Command/index.html">
+<meta property="og:title" content="单例模式设计">
+<meta property="og:url" content="http://wxyy97.com/2020/04/17/Danli_1/index.html">
 <meta property="og:site_name" content="Rain_G">
-<meta property="og:description" content="hexo -clean; hexo g; hexo s;">
+<meta property="og:description" content="对象单例设计：设计类时保证类的实例在类内存中只有一份。 1）内部设计实现（对类自身进行设计） 2）外部设计实现（对类的对象提供一种池）">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2020-04-17T08:01:44.133Z">
-<meta property="article:modified_time" content="2020-05-30T13:02:33.157Z">
+<meta property="article:published_time" content="2020-04-17T14:00:46.000Z">
+<meta property="article:modified_time" content="2020-05-30T13:00:13.715Z">
 <meta property="article:author" content="Mr Wang">
-<meta property="article:tag" content="Rain_G">
+<meta property="article:tag" content="达内">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://wxyy97.com/2020/04/17/Hexo%20Command/">
+<link rel="canonical" href="http://wxyy97.com/2020/04/17/Danli_1/">
 
 
 <script id="page-configurations">
@@ -46,7 +46,7 @@
   };
 </script>
 
-  <title>Hexo command | Rain_G</title>
+  <title>单例模式设计 | Rain_G</title>
   
 
 
@@ -159,7 +159,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://wxyy97.com/2020/04/17/Hexo%20Command/">
+    <link itemprop="mainEntityOfPage" href="http://wxyy97.com/2020/04/17/Danli_1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/wx.JPG">
@@ -172,7 +172,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Hexo command
+          单例模式设计
         </h1>
 
         <div class="post-meta">
@@ -182,18 +182,18 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2020-04-17 16:01:44" itemprop="dateCreated datePublished" datetime="2020-04-17T16:01:44+08:00">2020-04-17</time>
+              <time title="Created: 2020-04-17 22:00:46" itemprop="dateCreated datePublished" datetime="2020-04-17T22:00:46+08:00">2020-04-17</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-05-30 21:02:33" itemprop="dateModified" datetime="2020-05-30T21:02:33+08:00">2020-05-30</time>
+                <time title="Modified: 2020-05-30 21:00:13" itemprop="dateModified" datetime="2020-05-30T21:00:13+08:00">2020-05-30</time>
               </span>
 
           
-            <div class="post-description">hexo -clean; hexo g; hexo s;</div>
+            <div class="post-description">对象单例设计：设计类时保证类的实例在类内存中只有一份。<br> 1）内部设计实现（对类自身进行设计）<br> 2）外部设计实现（对类的对象提供一种池）</div>
 
         </div>
       </header>
@@ -204,17 +204,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">" New Post"</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="Clean-Cache"><a href="#Clean-Cache" class="headerlink" title="Clean Cache"></a>Clean Cache</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo clean</span><br></pre></td></tr></table></figure>
-
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<h3 id="Run-Server"><a href="#Run-Server" class="headerlink" title="Run Server"></a>Run Server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo s</span><br></pre></td></tr></table></figure>
-
-
+        <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.Servlet;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SingleTon1</span></span>&#123;</span><br><span class="line">	<span class="comment">//私有化构造方法，不允许外界创建对象</span></span><br><span class="line">	<span class="function"><span class="keyword">private</span>  <span class="title">SingleTon1</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"创建对象"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">private</span>  <span class="keyword">static</span> SingleTon1 instance = <span class="keyword">null</span>;</span><br><span class="line"><span class="comment">//	public static  synchronized SingleTon1 instance() &#123;</span></span><br><span class="line"><span class="comment">//		if (instance == null) &#123;</span></span><br><span class="line"><span class="comment">//			 instance = new SingleTon1();</span></span><br><span class="line"><span class="comment">//		&#125;</span></span><br><span class="line"><span class="comment">//		return instance;</span></span><br><span class="line"><span class="comment">//	&#125;synchronized按线程顺序执行，会使效率下降</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> SingleTon1 <span class="title">instance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="comment">//mute锁：静态方法用类名.class,动态用的是this</span></span><br><span class="line">		<span class="comment">//下面的设计会一定程度上减少线程阻塞，完后接volatile关键字</span></span><br><span class="line">		<span class="comment">/*	volatile关键字的作用：</span></span><br><span class="line"><span class="comment">		 * 	1、保证线程的可见性</span></span><br><span class="line"><span class="comment">		 * 	2、禁止指令重排序</span></span><br><span class="line"><span class="comment">		 * 	3、但不能保证其原子性</span></span><br><span class="line"><span class="comment">		 * 	记住：当多个线程对一个共享变量进行操作时，就用volatile修饰</span></span><br><span class="line"><span class="comment">		 * */</span></span><br><span class="line">		<span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;</span><br><span class="line">			<span class="keyword">synchronized</span> (SingleTon1<span class="class">.<span class="keyword">class</span>) </span>&#123;</span><br><span class="line">				<span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;</span><br><span class="line">					instance = SingleTon1.instance();</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> instance;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*  </span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> * 	此类设计存在线程不安全的原因？</span></span><br><span class="line"><span class="comment"> * 	1、多个线程并发执行</span></span><br><span class="line"><span class="comment"> * 	2、多个线程有共享数据集</span></span><br><span class="line"><span class="comment"> * 	3、多个线程在共享数据集上的操作是非原子操作</span></span><br><span class="line"><span class="comment"> * 	</span></span><br><span class="line"><span class="comment"> * 	*/</span></span><br><span class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DanliTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		<span class="comment">//SingleThreadTest(); 单线程测试</span></span><br><span class="line">		ManyThreadTest();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//单线程测试</span></span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">SingleThreadTest</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		SingleTon1 s1 = SingleTon1.instance();</span><br><span class="line">		SingleTon1 s2 = SingleTon1.instance();</span><br><span class="line">		System.out.println(s1 == s2);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//多线程测试</span></span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">ManyThreadTest</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="class"><span class="keyword">class</span> <span class="title">task</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span>&#123;</span><br><span class="line">			<span class="meta">@Override</span></span><br><span class="line">			<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">				SingleTon1.instance();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		Thread t1 = <span class="keyword">new</span> Thread(<span class="keyword">new</span> task());</span><br><span class="line">		Thread t2 = <span class="keyword">new</span> Thread(<span class="keyword">new</span> task());</span><br><span class="line">		Thread t3 = <span class="keyword">new</span> Thread(<span class="keyword">new</span> task());</span><br><span class="line">		t1.start();</span><br><span class="line">		t2.start();</span><br><span class="line">		t3.start();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * 	多线程测试结果是不安全的，方法是：</span></span><br><span class="line"><span class="comment">	 * 	加上synchronized</span></span><br><span class="line"><span class="comment">	 *	多线程会只创建一个对象,保证了代码的原子性、安全性，</span></span><br><span class="line"><span class="comment">	 *	但是要让多个线程在这个代码块上顺序执行，性能会下降。</span></span><br><span class="line"><span class="comment">	 * */</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
     </div>
@@ -224,17 +214,20 @@
     
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%BE%BE%E5%86%85/" rel="tag"># 达内</a>
+          </div>
 
         
 
 
         
     <div class="post-nav">
-      <div class="post-nav-item"></div>
       <div class="post-nav-item">
-    <a href="/2020/04/17/%E8%BE%BE%E5%86%85%E9%93%BE%E6%8E%A5/" rel="next" title="tarena link">
-      tarena link <i class="fa fa-chevron-right"></i>
+    <a href="/2020/04/17/%E8%BE%BE%E5%86%85%E9%93%BE%E6%8E%A5/" rel="prev" title="tarena link">
+      <i class="fa fa-chevron-left"></i> tarena link
     </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -293,7 +286,6 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Quick-Start"><span class="nav-number">1.</span> <span class="nav-text">Quick Start</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Create-a-new-post"><span class="nav-number">1.1.</span> <span class="nav-text">Create a new post</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Clean-Cache"><span class="nav-number">1.2.</span> <span class="nav-text">Clean Cache</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Generate-static-files"><span class="nav-number">1.3.</span> <span class="nav-text">Generate static files</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deploy-to-remote-sites"><span class="nav-number">1.4.</span> <span class="nav-text">Deploy to remote sites</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Run-Server"><span class="nav-number">1.5.</span> <span class="nav-text">Run Server</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
