@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wxyy97.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="对象单例设计：设计类时保证类的实例在类内存中只有一份。 1）内部设计实现（对类自身进行设计） 2）外部设计实现（对类的对象提供一种池）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="单例模式设计">
+<meta property="og:url" content="http://wxyy97.com/2020/05/30/Danli_1/index.html">
+<meta property="og:site_name" content="Rain_G">
+<meta property="og:description" content="对象单例设计：设计类时保证类的实例在类内存中只有一份。 1）内部设计实现（对类自身进行设计） 2）外部设计实现（对类的对象提供一种池）">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-05-30T14:00:46.000Z">
+<meta property="article:modified_time" content="2020-06-27T08:45:21.420Z">
+<meta property="article:author" content="Mr Wang">
+<meta property="article:tag" content="达内">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://wxyy97.com/2020/05/30/Danli_1/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>单例模式设计 | Rain_G</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Rain_G</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Rain_G</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/rain-G-G" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://wxyy97.com/2020/05/30/Danli_1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/wx.JPG">
+      <meta itemprop="name" content="Mr Wang">
+      <meta itemprop="description" content="愿你一生努力，一生被爱">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Rain_G">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          单例模式设计
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-05-30 22:00:46" itemprop="dateCreated datePublished" datetime="2020-05-30T22:00:46+08:00">2020-05-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-06-27 16:45:21" itemprop="dateModified" datetime="2020-06-27T16:45:21+08:00">2020-06-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java%E5%9F%BA%E7%A1%80/" itemprop="url" rel="index"><span itemprop="name">Java基础</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java%E5%9F%BA%E7%A1%80/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E8%AE%BE%E8%AE%A1/" itemprop="url" rel="index"><span itemprop="name">单例模式设计</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">对象单例设计：设计类时保证类的实例在类内存中只有一份。<br> 1）内部设计实现（对类自身进行设计）<br> 2）外部设计实现（对类的对象提供一种池）</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.Servlet;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SingleTon1</span></span>&#123;</span><br><span class="line">	<span class="comment">//私有化构造方法，不允许外界创建对象</span></span><br><span class="line">	<span class="function"><span class="keyword">private</span>  <span class="title">SingleTon1</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"创建对象"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">private</span>  <span class="keyword">static</span> SingleTon1 instance = <span class="keyword">null</span>;</span><br><span class="line"><span class="comment">//	public static  synchronized SingleTon1 instance() &#123;</span></span><br><span class="line"><span class="comment">//		if (instance == null) &#123;</span></span><br><span class="line"><span class="comment">//			 instance = new SingleTon1();</span></span><br><span class="line"><span class="comment">//		&#125;</span></span><br><span class="line"><span class="comment">//		return instance;</span></span><br><span class="line"><span class="comment">//	&#125;synchronized按线程顺序执行，会使效率下降</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> SingleTon1 <span class="title">instance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="comment">//mute锁：静态方法用类名.class,动态用的是this</span></span><br><span class="line">		<span class="comment">//下面的设计会一定程度上减少线程阻塞，完后接volatile关键字</span></span><br><span class="line">		<span class="comment">/*	volatile关键字的作用：</span></span><br><span class="line"><span class="comment">		 * 	1、保证线程的可见性</span></span><br><span class="line"><span class="comment">		 * 	2、禁止指令重排序</span></span><br><span class="line"><span class="comment">		 * 	3、但不能保证其原子性</span></span><br><span class="line"><span class="comment">		 * 	记住：当多个线程对一个共享变量进行操作时，就用volatile修饰</span></span><br><span class="line"><span class="comment">		 * */</span></span><br><span class="line">		<span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;</span><br><span class="line">			<span class="keyword">synchronized</span> (SingleTon1<span class="class">.<span class="keyword">class</span>) </span>&#123;</span><br><span class="line">				<span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;</span><br><span class="line">					instance = SingleTon1.instance();</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> instance;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*  </span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> * 	此类设计存在线程不安全的原因？</span></span><br><span class="line"><span class="comment"> * 	1、多个线程并发执行</span></span><br><span class="line"><span class="comment"> * 	2、多个线程有共享数据集</span></span><br><span class="line"><span class="comment"> * 	3、多个线程在共享数据集上的操作是非原子操作</span></span><br><span class="line"><span class="comment"> * 	</span></span><br><span class="line"><span class="comment"> * 	*/</span></span><br><span class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DanliTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		<span class="comment">//SingleThreadTest(); 单线程测试</span></span><br><span class="line">		ManyThreadTest();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//单线程测试</span></span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">SingleThreadTest</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		SingleTon1 s1 = SingleTon1.instance();</span><br><span class="line">		SingleTon1 s2 = SingleTon1.instance();</span><br><span class="line">		System.out.println(s1 == s2);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//多线程测试</span></span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">ManyThreadTest</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="class"><span class="keyword">class</span> <span class="title">task</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span>&#123;</span><br><span class="line">			<span class="meta">@Override</span></span><br><span class="line">			<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">				SingleTon1.instance();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		Thread t1 = <span class="keyword">new</span> Thread(<span class="keyword">new</span> task());</span><br><span class="line">		Thread t2 = <span class="keyword">new</span> Thread(<span class="keyword">new</span> task());</span><br><span class="line">		Thread t3 = <span class="keyword">new</span> Thread(<span class="keyword">new</span> task());</span><br><span class="line">		t1.start();</span><br><span class="line">		t2.start();</span><br><span class="line">		t3.start();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * 	多线程测试结果是不安全的，方法是：</span></span><br><span class="line"><span class="comment">	 * 	加上synchronized</span></span><br><span class="line"><span class="comment">	 *	多线程会只创建一个对象,保证了代码的原子性、安全性，</span></span><br><span class="line"><span class="comment">	 *	但是要让多个线程在这个代码块上顺序执行，性能会下降。</span></span><br><span class="line"><span class="comment">	 * */</span></span><br><span class="line">        </span><br><span class="line">    <span class="comment">//小对象频繁用,线程安全，无阻塞</span></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Singleton2</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> array[] = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">2048</span>];</span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="title">Singleton2</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> Singleton2 instance = <span class="keyword">new</span> Singleton2();</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton2 <span class="title">instance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> instance;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">show</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">        <span class="comment">//此单例的缺陷：可能占用资源比较多，尤其是大对象</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//大对象，频繁用</span></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Singleton3</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> array[] = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">2048</span>];</span><br><span class="line">        <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">inner</span></span>&#123;</span><br><span class="line">            <span class="keyword">private</span> <span class="keyword">static</span> Singleton3 instance = <span class="keyword">new</span> Singleton3();</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="title">Singleton3</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton3 <span class="title">instance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> inner.instance;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">show</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DanliTest02</span> </span>&#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">            Singleton2.show();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%BE%BE%E5%86%85/" rel="tag"># 达内</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/04/17/Hexo%20Command/" rel="prev" title="hexo command">
+      <i class="fa fa-chevron-left"></i> hexo command
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Mr Wang"
+      src="/images/wx.JPG">
+  <p class="site-author-name" itemprop="name">Mr Wang</p>
+  <div class="site-description" itemprop="description">愿你一生努力，一生被爱</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/rain-G-G" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;rain-G-G" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-heartbeat fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://blog.csdn.net/sinat_37781304/article/details/82729029?depth_1-utm_source=distribute.wap_relevant.none-task-blog-BlogCommendFromBaidu-1&utm_source=distribute.wap_relevant.none-task-blog-BlogCommendFromBaidu-1&from=singlemessage&isappinstalled=0" title="https:&#x2F;&#x2F;blog.csdn.net&#x2F;sinat_37781304&#x2F;article&#x2F;details&#x2F;82729029?depth_1-utm_source&#x3D;distribute.wap_relevant.none-task-blog-BlogCommendFromBaidu-1&amp;utm_source&#x3D;distribute.wap_relevant.none-task-blog-BlogCommendFromBaidu-1&amp;from&#x3D;singlemessage&amp;isappinstalled&#x3D;0" rel="noopener" target="_blank">Hexo搭建</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.jianshu.com/p/85ea951ce996?from=singlemessage&isappinstalled=0" title="https:&#x2F;&#x2F;www.jianshu.com&#x2F;p&#x2F;85ea951ce996?from&#x3D;singlemessage&amp;isappinstalled&#x3D;0" rel="noopener" target="_blank">NexT美化</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr Wang</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
