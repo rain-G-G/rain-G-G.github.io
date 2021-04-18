@@ -151,7 +151,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://wxyy97.com/2021/04/12/android-start/">
+    <link itemprop="mainEntityOfPage" href="http://wxyy97.com/2021/04/18/Activity/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/wx.JPG">
@@ -165,7 +165,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/04/12/android-start/" class="post-title-link" itemprop="url">android start</a>
+            <a href="/2021/04/18/Activity/" class="post-title-link" itemprop="url">Activity</a>
         </h2>
 
         <div class="post-meta">
@@ -176,20 +176,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2021-04-12 22:48:46 / Modified: 22:55:42" itemprop="dateCreated datePublished" datetime="2021-04-12T22:48:46+08:00">2021-04-12</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/%E5%BC%80%E6%9C%BA%E5%90%91%E5%AF%BC%E5%90%AF%E5%8A%A8/" itemprop="url" rel="index"><span itemprop="name">开机向导启动</span></a>
-                </span>
+              <time title="Created: 2021-04-18 23:11:06 / Modified: 23:08:22" itemprop="dateCreated datePublished" datetime="2021-04-18T23:11:06+08:00">2021-04-18</time>
             </span>
 
           
@@ -203,49 +190,126 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="开机向导启动时机分析"><a href="#开机向导启动时机分析" class="headerlink" title="开机向导启动时机分析"></a>开机向导启动时机分析</h1><p><strong>SystemServer.java</strong> </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">private void run() &#123;</span><br><span class="line">               &#x2F;&#x2F; Start services.</span><br><span class="line">        try &#123;</span><br><span class="line">            traceBeginAndSlog(&quot;StartServices&quot;);</span><br><span class="line">            startBootstrapServices();</span><br><span class="line">            startCoreServices();</span><br><span class="line">            startOtherServices();   &#x2F;&#x2F;启动SystemUi、开机向导、Launcher等</span><br><span class="line">            SystemServerInitThreadPool.shutdown();</span><br><span class="line">        &#125; catch (Throwable ex) &#123;</span><br><span class="line">            ...</span><br><span class="line">                       ...</span><br><span class="line">        &#125;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">private void startOtherServices() &#123;</span><br><span class="line">        ...</span><br><span class="line">        mActivityManagerService.systemReady(() -&gt; &#123;</span><br><span class="line">               ...</span><br><span class="line">               traceBeginAndSlog(&quot;StartSystemUI&quot;);</span><br><span class="line">            try &#123;</span><br><span class="line">                startSystemUi(context, windowManagerF);   &#x2F;&#x2F;启动systemUi</span><br><span class="line">            &#125; catch (Throwable e) &#123;</span><br><span class="line">                reportWtf(&quot;starting System UI&quot;, e);</span><br><span class="line">            &#125;</span><br><span class="line">            traceEnd();</span><br><span class="line">               ...</span><br><span class="line">        </span><br><span class="line">        &#125;,BOOT_TIMINGS_TRACE_LOG);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <h6 id="Activity-生命周期、状态-使用"><a href="#Activity-生命周期、状态-使用" class="headerlink" title="Activity 生命周期、状态   使用"></a>Activity 生命周期、状态   <a href="https://blog.csdn.net/qq_36270361/article/details/107141162" target="_blank" rel="noopener">使用</a></h6>
+      
+    </div>
 
-<p><strong>ActivityManagerService.java</strong> </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public void systemReady(final Runnable goingCallback, TimingsTraceLog traceLog) &#123;</span><br><span class="line">        ...</span><br><span class="line">               if (goingCallback !&#x3D; null) goingCallback.run();   &#x2F;&#x2F;启动systemUi</span><br><span class="line">        ...</span><br><span class="line">        synchronized(this) &#123;</span><br><span class="line">               ...</span><br><span class="line">               mAtmInternal.startHomeOnAllDisplays(currentUserId, &quot;systemReady&quot;); &#x2F;&#x2F;启动开机向导和Launcher</span><br><span class="line">               ...</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
 
-<p><strong>SystemUIService.java</strong> </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public class SystemUIService extends Service &#123;</span><br><span class="line">         @Override</span><br><span class="line">    public void onCreate() &#123;</span><br><span class="line">        super.onCreate();</span><br><span class="line">        ((SystemUIApplication) getApplication()).startServicesIfNeeded();</span><br><span class="line">               ...</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://wxyy97.com/2021/04/18/AsyncTask/">
 
-<p><strong>SystemUIApplication.java</strong> </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public void startServicesIfNeeded() &#123;</span><br><span class="line">        String[] names &#x3D; getResources().getStringArray(R.array.config_systemUIServiceComponents);</span><br><span class="line">        startServicesIfNeeded(names);</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">---------config.xml ------------</span><br><span class="line">...</span><br><span class="line">&lt;item&gt;com.android.systemui.SystemBars&lt;&#x2F;item&gt;</span><br><span class="line"> </span><br><span class="line">&lt;item&gt;com.android.systemui.usb.StorageNotification&lt;&#x2F;item&gt;</span><br><span class="line"> </span><br><span class="line">&lt;item&gt;com.android.systemui.power.PowerUI&lt;&#x2F;item&gt;</span><br><span class="line">...</span><br><span class="line"> </span><br><span class="line">&#x2F;&#x2F;从config.xml文件获取组件的名称，状态栏和导航栏就是从这里获取并启动。</span><br></pre></td></tr></table></figure>
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/wx.JPG">
+      <meta itemprop="name" content="Rain.G">
+      <meta itemprop="description" content="愿你一生努力，一生被爱">
+    </span>
 
-<p>这里将SystemUI直接屏蔽，发现开机向导还是会出现状态栏和导航栏；</p>
-<p>分析原因后知道是 KeyguardService 启动了上面提到的SystemUi小组件</p>
-<p>以上就是基本的流程，现在的方案如下：</p>
-<p>1、延迟SystemUI加载的时间，即开机向导结束后发广播启动SystemUI</p>
-<p>2、KeyguardService延迟启动SystemUi组件</p>
-<p><strong>延迟SystemUI加载方案：</strong> </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">private void startOtherServices() &#123;</span><br><span class="line">        ...</span><br><span class="line">        mActivityManagerService.systemReady(() -&gt; &#123;</span><br><span class="line">               ...</span><br><span class="line">               &#x2F;**traceBeginAndSlog(&quot;StartSystemUI&quot;);</span><br><span class="line">            try &#123;</span><br><span class="line">                startSystemUi(context, windowManagerF);   &#x2F;&#x2F;启动systemUi</span><br><span class="line">            &#125; catch (Throwable e) &#123;</span><br><span class="line">                reportWtf(&quot;starting System UI&quot;, e);</span><br><span class="line">            &#125;</span><br><span class="line">            traceEnd();*&#x2F;</span><br><span class="line">               if(Settings.Global.getInt(getBaseContext().getContentResolver(), &quot;device_provisioned&quot;) &#x3D;&#x3D; 1)&#123;</span><br><span class="line">                       startSystemUi(context, windowManagerF);</span><br><span class="line">               &#125;</span><br><span class="line">               BroadcastReceiver startSystemUIReceiver &#x3D; new BroadcastReceiver() &#123;</span><br><span class="line">        @Override</span><br><span class="line">        public void onReceive(Context context, Intent intent) &#123;</span><br><span class="line">            if (&quot;com.guyu.action.START_SYSTEMUI&quot;.equals(intent.getAction())) &#123;</span><br><span class="line">               Slog.v(&quot;wx6&quot;, &quot;SystemServer receive com.guyu.action.START_SYSTEMUI&quot;);</span><br><span class="line">                       startSystemUi(context, windowManagerF);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">               IntentFilter filter &#x3D; new IntentFilter();</span><br><span class="line">               filter.addAction(&quot;com.guyu.action.START_SYSTEMUI&quot;);</span><br><span class="line">        context.registerReceiver(startSystemUIReceiver, filter);</span><br><span class="line">               ...</span><br><span class="line">        </span><br><span class="line">        &#125;,BOOT_TIMINGS_TRACE_LOG);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Rain_G">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/04/18/AsyncTask/" class="post-title-link" itemprop="url">AsyncTask</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-04-18 23:11:06 / Modified: 23:08:38" itemprop="dateCreated datePublished" datetime="2021-04-18T23:11:06+08:00">2021-04-18</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h6 id="AsyncTask-基本使用"><a href="#AsyncTask-基本使用" class="headerlink" title="AsyncTask  基本使用"></a>AsyncTask  <a href="https://www.jianshu.com/p/ee1342fcf5e7" target="_blank" rel="noopener">基本使用</a></h6><h6 id="AsyncTask-原理及源码"><a href="#AsyncTask-原理及源码" class="headerlink" title="AsyncTask  原理及源码"></a>AsyncTask  <a href="https://www.jianshu.com/p/37502bbbb25a" target="_blank" rel="noopener">原理及源码</a></h6><p>注意: 本以为调用task.cancel(true)就可以强制结束AsyncTask，但是实际上是不可行的，因为task.cancel(true)方法仅仅是将AsyncTask的cancel标识符设置为true，仍然需要去手动停止循环</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> Void <span class="title">doInBackground</span><span class="params">(Void ...voids)</span> </span>&#123;</span><br><span class="line">      <span class="comment">// initialization ...</span></span><br><span class="line">      <span class="keyword">while</span>(<span class="keyword">true</span>) &#123;</span><br><span class="line">          <span class="keyword">if</span>(isCancelled()) <span class="comment">//这里判断标识符</span></span><br><span class="line">              <span class="keyword">break</span>;</span><br><span class="line">          <span class="comment">// do my thing ...</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// ending ...</span></span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
 
 
+      
+    </div>
 
-<p><strong>KeyguardService延迟启动SystemUi组件的方案:</strong> </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">这个 service 在系统启动的时候和 SystemUI 启动的时候都会绑定这个服务</span><br><span class="line"> </span><br><span class="line">@Override</span><br><span class="line">    public void onCreate() &#123;</span><br><span class="line">        try&#123;</span><br><span class="line">               if(Settings.Global.getInt(getBaseContext().getContentResolver(), &quot;device_provisioned&quot;) &#x3D;&#x3D; 0)&#123;</span><br><span class="line">        android.util.Log.v(&quot;wx2021&quot;, &quot;res &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&quot; + Settings.Global.getString(getBaseContext().getContentResolver(), &quot;device_provisioned&quot;));</span><br><span class="line">               &#125;else  &#123;</span><br><span class="line">                       ((SystemUIApplication) getApplication()).startServicesIfNeeded();</span><br><span class="line">               &#125;</span><br><span class="line">        &#125; catch (Settings.SettingNotFoundException e) &#123;</span><br><span class="line">        &#125;</span><br><span class="line">        &#x2F;&#x2F;((SystemUIApplication) getApplication()).startServicesIfNeeded();   &#x2F;&#x2F;这里调用 SystemUIApplication</span><br><span class="line">        mKeyguardViewMediator &#x3D;</span><br><span class="line">                ((SystemUIApplication) getApplication()).getComponent(KeyguardViewMediator.class);</span><br><span class="line">        mKeyguardLifecyclesDispatcher &#x3D; new KeyguardLifecyclesDispatcher(</span><br><span class="line">                Dependency.get(ScreenLifecycle.class),</span><br><span class="line">                Dependency.get(WakefulnessLifecycle.class));</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
 
-<p>这样修改后导致开机向导结束后会进入锁屏，分析后觉得是 SystemUi 的启动时机太晚引起，分析过程如下：</p>
-<p><strong>PhoneWindowManager.java</strong> </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">   public void onSystemUiStarted() &#123;</span><br><span class="line">       bindKeyguard();</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">       private void bindKeyguard() &#123;</span><br><span class="line">       synchronized (mLock) &#123;</span><br><span class="line">           if (mKeyguardBound) &#123;</span><br><span class="line">               return;</span><br><span class="line">           &#125;</span><br><span class="line">           mKeyguardBound &#x3D; true;</span><br><span class="line">       &#125;</span><br><span class="line">       mKeyguardDelegate.bindService(mContext);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://wxyy97.com/2021/04/18/Handler%E6%9C%BA%E5%88%B6/">
 
-<p><strong>keyguardDelegate.java</strong> </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">public void bindService(Context context) &#123;</span><br><span class="line">        ...</span><br><span class="line">        final ComponentName keyguardComponent &#x3D; ComponentName.unflattenFromString(</span><br><span class="line">                resources.getString(com.android.internal.R.string.config_keyguardComponent)); &#x2F;&#x2F;KeyguardService</span><br><span class="line">        intent.addFlags(Intent.FLAG_DEBUG_TRIAGED_MISSING);</span><br><span class="line">        intent.setComponent(keyguardComponent);</span><br><span class="line"> </span><br><span class="line">        if (!context.bindServiceAsUser(intent, mKeyguardConnection,</span><br><span class="line">                Context.BIND_AUTO_CREATE, mHandler, UserHandle.SYSTEM)) &#123;</span><br><span class="line">            Log.v(TAG, &quot;*** Keyguard: can&#39;t bind to &quot; + keyguardComponent);</span><br><span class="line">                       ...</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            if (DEBUG) Log.v(TAG, &quot;*** Keyguard started&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    private final ServiceConnection mKeyguardConnection &#x3D; new ServiceConnection() &#123;</span><br><span class="line">        @Override</span><br><span class="line">        public void onServiceConnected(ComponentName name, IBinder service) &#123;</span><br><span class="line">            if (DEBUG) Log.v(TAG, &quot;*** Keyguard connected (yay!)&quot;);</span><br><span class="line">Slog.v(&quot;wx000&quot;, &quot;onServiceConnected&quot;);</span><br><span class="line">            mKeyguardService &#x3D; new KeyguardServiceWrapper(mContext,</span><br><span class="line">                    IKeyguardService.Stub.asInterface(service), mCallback);</span><br><span class="line">            if (mKeyguardState.systemIsReady) &#123;</span><br><span class="line">                &#x2F;&#x2F; If the system is ready, it means keyguard crashed and restarted.</span><br><span class="line">Slog.v(&quot;wx000&quot;, &quot;mKeyguardState.systemIsReady&quot;);</span><br><span class="line">                mKeyguardService.onSystemReady();     &#x2F;&#x2F;这里进行 锁屏 操作</span><br><span class="line">                       ...</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/wx.JPG">
+      <meta itemprop="name" content="Rain.G">
+      <meta itemprop="description" content="愿你一生努力，一生被爱">
+    </span>
 
-<p>之前没修改 SystemUi 加载时间之前，也会走到这里， 不过在锁屏的时候进行了判断，如果开机向导还没结束，直接 return 不进行锁屏</p>
-<p>现在修改是在 开机向导结束后启动 SystemUi，走到这里没有 return 的条件， 所以会锁屏</p>
-<p><strong>KeyguardViewMediator.java</strong> </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">private void doKeyguardLocked(Bundle options) &#123;</span><br><span class="line">android.util.Log.v(&quot;wx000&quot;, &quot;00000000000000&quot;);</span><br><span class="line">        ...</span><br><span class="line">        &#x2F;&#x2F; In split system user mode, we never unlock system user.</span><br><span class="line">        if (!mustNotUnlockCurrentUser()</span><br><span class="line">                || !mUpdateMonitor.isDeviceProvisioned()) &#123;</span><br><span class="line"> </span><br><span class="line">            if (!lockedOrMissing &amp;&amp; shouldWaitForProvisioning()) &#123;</span><br><span class="line">                if (DEBUG) Log.d(TAG, &quot;doKeyguard: not showing because device isn&#39;t provisioned&quot;</span><br><span class="line">                        + &quot; and the sim is not locked or missing&quot;);</span><br><span class="line">                return;</span><br><span class="line">            &#125;</span><br><span class="line">               ...</span><br><span class="line">        if (DEBUG) Log.d(TAG, &quot;doKeyguard: showing the lock screen&quot;);</span><br><span class="line">        showLocked(options);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Rain_G">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/04/18/Handler%E6%9C%BA%E5%88%B6/" class="post-title-link" itemprop="url">Handler机制</a>
+        </h2>
 
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
 
+              <time title="Created: 2021-04-18 23:11:06 / Modified: 23:09:16" itemprop="dateCreated datePublished" datetime="2021-04-18T23:11:06+08:00">2021-04-18</time>
+            </span>
 
-<p>最后决定将 SystemUI 的启动时间放在 显示状态栏界面的后面，即卡多希登陆界面的后面，在点击下一步的时候发送广播 ，启动SystemUi</p>
-<p>从log看 发广播到 锁屏判断 花费将近1s 多， 有次到5s</p>
-<p><img src="file:///C:%5CUsers%5CADMINI~1%5CAppData%5CLocal%5CTemp%5Cmsohtmlclip1%5C01%5Cclip_image002.jpg" alt="img"></p>
+          
 
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h6 id="Handler机制-基本用法"><a href="#Handler机制-基本用法" class="headerlink" title="Handler机制    基本用法"></a>Handler机制    <a href="https://www.jianshu.com/p/fa1450b0bbf6" target="_blank" rel="noopener">基本用法</a></h6>
       
     </div>
 
@@ -338,7 +402,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://wxyy97.com/2020/04/01/%E8%BE%BE%E5%86%85%E9%93%BE%E6%8E%A5/">
+    <link itemprop="mainEntityOfPage" href="http://wxyy97.com/2021/04/18/View%20%E4%BD%93%E7%B3%BB/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/wx.JPG">
@@ -352,7 +416,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/04/01/%E8%BE%BE%E5%86%85%E9%93%BE%E6%8E%A5/" class="post-title-link" itemprop="url">knows link</a>
+            <a href="/2021/04/18/View%20%E4%BD%93%E7%B3%BB/" class="post-title-link" itemprop="url">View 体系</a>
         </h2>
 
         <div class="post-meta">
@@ -361,16 +425,10 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
+              
 
-              <time title="Created: 2020-04-01 22:00:46" itemprop="dateCreated datePublished" datetime="2020-04-01T22:00:46+08:00">2020-04-01</time>
+              <time title="Created: 2021-04-18 23:11:06 / Modified: 23:09:35" itemprop="dateCreated datePublished" datetime="2021-04-18T23:11:06+08:00">2021-04-18</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-07-24 10:20:07" itemprop="dateModified" datetime="2020-07-24T10:20:07+08:00">2020-07-24</time>
-              </span>
 
           
 
@@ -383,9 +441,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p><a href="https://thinkwon.blog.csdn.net/article/details/104390612" target="_blank" rel="noopener">Java面试</a></p>
-<p><a href="https://github.com/YunaiV/SpringBoot-Labs" target="_blank" rel="noopener">SpringBoot全栈</a></p>
-
+          <h6 id="View-体系，包括动画"><a href="#View-体系，包括动画" class="headerlink" title="View 体系，包括动画"></a>View 体系，包括动画</h6>
       
     </div>
 
@@ -404,7 +460,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://wxyy97.com/2020/04/17/Hexo%20Command/">
+    <link itemprop="mainEntityOfPage" href="http://wxyy97.com/2021/04/12/android-start/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/wx.JPG">
@@ -418,7 +474,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/04/17/Hexo%20Command/" class="post-title-link" itemprop="url">hexo command</a>
+            <a href="/2021/04/12/android-start/" class="post-title-link" itemprop="url">android start</a>
         </h2>
 
         <div class="post-meta">
@@ -428,15 +484,32 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2020-04-17 16:01:44" itemprop="dateCreated datePublished" datetime="2020-04-17T16:01:44+08:00">2020-04-17</time>
+              <time title="Created: 2021-04-12 22:48:46" itemprop="dateCreated datePublished" datetime="2021-04-12T22:48:46+08:00">2021-04-12</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-05-31 20:55:15" itemprop="dateModified" datetime="2020-05-31T20:55:15+08:00">2020-05-31</time>
+                <time title="Modified: 2021-04-18 23:24:36" itemprop="dateModified" datetime="2021-04-18T23:24:36+08:00">2021-04-18</time>
               </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Android%E6%A1%86%E6%9E%B6%E5%B1%82/" itemprop="url" rel="index"><span itemprop="name">Android框架层</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Android%E6%A1%86%E6%9E%B6%E5%B1%82/%E5%BC%80%E6%9C%BA%E5%90%91%E5%AF%BC%E5%90%AF%E5%8A%A8/" itemprop="url" rel="index"><span itemprop="name">开机向导启动</span></a>
+                </span>
+            </span>
 
           
 
@@ -449,15 +522,50 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>hexo clean、 hexo g、 hexo d、 hexo s</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/04/17/Hexo%20Command/">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
+          <h1 id="开机向导启动时机分析"><a href="#开机向导启动时机分析" class="headerlink" title="开机向导启动时机分析"></a>开机向导启动时机分析</h1><p><strong>SystemServer.java</strong> </p>
+<p>这篇主要是解决开机向导中闪状态栏和导航栏的bug，一种方案就是延迟SystemUI的加载时间，虽然这种方案因改动太大而且带来许多小问题 最终被否定，但在这里还是要简单分析下相关的流程。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">private void run() &#123;</span><br><span class="line">               &#x2F;&#x2F; Start services.</span><br><span class="line">        try &#123;</span><br><span class="line">            traceBeginAndSlog(&quot;StartServices&quot;);</span><br><span class="line">            startBootstrapServices();</span><br><span class="line">            startCoreServices();</span><br><span class="line">            startOtherServices();   &#x2F;&#x2F;启动SystemUi、开机向导、Launcher等</span><br><span class="line">            SystemServerInitThreadPool.shutdown();</span><br><span class="line">        &#125; catch (Throwable ex) &#123;</span><br><span class="line">            ...</span><br><span class="line">                       ...</span><br><span class="line">        &#125;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">private void startOtherServices() &#123;</span><br><span class="line">        ...</span><br><span class="line">        mActivityManagerService.systemReady(() -&gt; &#123;</span><br><span class="line">               ...</span><br><span class="line">               traceBeginAndSlog(&quot;StartSystemUI&quot;);</span><br><span class="line">            try &#123;</span><br><span class="line">                startSystemUi(context, windowManagerF);   &#x2F;&#x2F;启动systemUi</span><br><span class="line">            &#125; catch (Throwable e) &#123;</span><br><span class="line">                reportWtf(&quot;starting System UI&quot;, e);</span><br><span class="line">            &#125;</span><br><span class="line">            traceEnd();</span><br><span class="line">               ...</span><br><span class="line">        </span><br><span class="line">        &#125;,BOOT_TIMINGS_TRACE_LOG);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>ActivityManagerService.java</strong> </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public void systemReady(final Runnable goingCallback, TimingsTraceLog traceLog) &#123;</span><br><span class="line">        ...</span><br><span class="line">               if (goingCallback !&#x3D; null) goingCallback.run();   &#x2F;&#x2F;启动systemUi</span><br><span class="line">        ...</span><br><span class="line">        synchronized(this) &#123;</span><br><span class="line">               ...</span><br><span class="line">               mAtmInternal.startHomeOnAllDisplays(currentUserId, &quot;systemReady&quot;); &#x2F;&#x2F;启动开机向导和Launcher</span><br><span class="line">               ...</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>SystemUIService.java</strong> </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public class SystemUIService extends Service &#123;</span><br><span class="line">         @Override</span><br><span class="line">    public void onCreate() &#123;</span><br><span class="line">        super.onCreate();</span><br><span class="line">        ((SystemUIApplication) getApplication()).startServicesIfNeeded();</span><br><span class="line">               ...</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>SystemUIApplication.java</strong> </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public void startServicesIfNeeded() &#123;</span><br><span class="line">        String[] names &#x3D; getResources().getStringArray(R.array.config_systemUIServiceComponents);</span><br><span class="line">        startServicesIfNeeded(names);</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">---------config.xml ------------</span><br><span class="line">...</span><br><span class="line">&lt;item&gt;com.android.systemui.SystemBars&lt;&#x2F;item&gt;</span><br><span class="line"> </span><br><span class="line">&lt;item&gt;com.android.systemui.usb.StorageNotification&lt;&#x2F;item&gt;</span><br><span class="line"> </span><br><span class="line">&lt;item&gt;com.android.systemui.power.PowerUI&lt;&#x2F;item&gt;</span><br><span class="line">...</span><br><span class="line"> </span><br><span class="line">&#x2F;&#x2F;从config.xml文件获取组件的名称，状态栏和导航栏就是从这里获取并启动。</span><br></pre></td></tr></table></figure>
+
+<p>这里将SystemUI直接屏蔽，发现开机向导还是会出现状态栏和导航栏；</p>
+<p>分析原因后知道是 KeyguardService 启动了上面提到的SystemUi小组件</p>
+<p>以上就是基本的流程，现在的方案如下：</p>
+<p>1、延迟SystemUI加载的时间，即开机向导结束后发广播启动SystemUI</p>
+<p>2、KeyguardService延迟启动SystemUi组件</p>
+<p><strong>延迟SystemUI加载方案：</strong> </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">private void startOtherServices() &#123;</span><br><span class="line">        ...</span><br><span class="line">        mActivityManagerService.systemReady(() -&gt; &#123;</span><br><span class="line">               ...</span><br><span class="line">               &#x2F;**traceBeginAndSlog(&quot;StartSystemUI&quot;);</span><br><span class="line">            try &#123;</span><br><span class="line">                startSystemUi(context, windowManagerF);   &#x2F;&#x2F;启动systemUi</span><br><span class="line">            &#125; catch (Throwable e) &#123;</span><br><span class="line">                reportWtf(&quot;starting System UI&quot;, e);</span><br><span class="line">            &#125;</span><br><span class="line">            traceEnd();*&#x2F;</span><br><span class="line">               if(Settings.Global.getInt(getBaseContext().getContentResolver(), &quot;device_provisioned&quot;) &#x3D;&#x3D; 1)&#123;</span><br><span class="line">                       startSystemUi(context, windowManagerF);</span><br><span class="line">               &#125;</span><br><span class="line">               BroadcastReceiver startSystemUIReceiver &#x3D; new BroadcastReceiver() &#123;</span><br><span class="line">        @Override</span><br><span class="line">        public void onReceive(Context context, Intent intent) &#123;</span><br><span class="line">            if (&quot;com.guyu.action.START_SYSTEMUI&quot;.equals(intent.getAction())) &#123;</span><br><span class="line">               Slog.v(&quot;wx6&quot;, &quot;SystemServer receive com.guyu.action.START_SYSTEMUI&quot;);</span><br><span class="line">                       startSystemUi(context, windowManagerF);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">               IntentFilter filter &#x3D; new IntentFilter();</span><br><span class="line">               filter.addAction(&quot;com.guyu.action.START_SYSTEMUI&quot;);</span><br><span class="line">        context.registerReceiver(startSystemUIReceiver, filter);</span><br><span class="line">               ...</span><br><span class="line">        </span><br><span class="line">        &#125;,BOOT_TIMINGS_TRACE_LOG);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>KeyguardService延迟启动SystemUi组件的方案:</strong> </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">这个 service 在系统启动的时候和 SystemUI 启动的时候都会绑定这个服务</span><br><span class="line"> </span><br><span class="line">@Override</span><br><span class="line">    public void onCreate() &#123;</span><br><span class="line">        try&#123;</span><br><span class="line">               if(Settings.Global.getInt(getBaseContext().getContentResolver(), &quot;device_provisioned&quot;) &#x3D;&#x3D; 0)&#123;</span><br><span class="line">        android.util.Log.v(&quot;wx2021&quot;, &quot;res &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&quot; + Settings.Global.getString(getBaseContext().getContentResolver(), &quot;device_provisioned&quot;));</span><br><span class="line">               &#125;else  &#123;</span><br><span class="line">                       ((SystemUIApplication) getApplication()).startServicesIfNeeded();</span><br><span class="line">               &#125;</span><br><span class="line">        &#125; catch (Settings.SettingNotFoundException e) &#123;</span><br><span class="line">        &#125;</span><br><span class="line">        &#x2F;&#x2F;((SystemUIApplication) getApplication()).startServicesIfNeeded();   &#x2F;&#x2F;这里调用 SystemUIApplication</span><br><span class="line">        mKeyguardViewMediator &#x3D;</span><br><span class="line">                ((SystemUIApplication) getApplication()).getComponent(KeyguardViewMediator.class);</span><br><span class="line">        mKeyguardLifecyclesDispatcher &#x3D; new KeyguardLifecyclesDispatcher(</span><br><span class="line">                Dependency.get(ScreenLifecycle.class),</span><br><span class="line">                Dependency.get(WakefulnessLifecycle.class));</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样修改后导致开机向导结束后会进入锁屏，分析后觉得是 SystemUi 的启动时机太晚引起，分析过程如下：</p>
+<p><strong>PhoneWindowManager.java</strong> </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">   public void onSystemUiStarted() &#123;</span><br><span class="line">       bindKeyguard();</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">       private void bindKeyguard() &#123;</span><br><span class="line">       synchronized (mLock) &#123;</span><br><span class="line">           if (mKeyguardBound) &#123;</span><br><span class="line">               return;</span><br><span class="line">           &#125;</span><br><span class="line">           mKeyguardBound &#x3D; true;</span><br><span class="line">       &#125;</span><br><span class="line">       mKeyguardDelegate.bindService(mContext);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>keyguardDelegate.java</strong> </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">public void bindService(Context context) &#123;</span><br><span class="line">        ...</span><br><span class="line">        final ComponentName keyguardComponent &#x3D; ComponentName.unflattenFromString(</span><br><span class="line">                resources.getString(com.android.internal.R.string.config_keyguardComponent)); &#x2F;&#x2F;KeyguardService</span><br><span class="line">        intent.addFlags(Intent.FLAG_DEBUG_TRIAGED_MISSING);</span><br><span class="line">        intent.setComponent(keyguardComponent);</span><br><span class="line"> </span><br><span class="line">        if (!context.bindServiceAsUser(intent, mKeyguardConnection,</span><br><span class="line">                Context.BIND_AUTO_CREATE, mHandler, UserHandle.SYSTEM)) &#123;</span><br><span class="line">            Log.v(TAG, &quot;*** Keyguard: can&#39;t bind to &quot; + keyguardComponent);</span><br><span class="line">                       ...</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            if (DEBUG) Log.v(TAG, &quot;*** Keyguard started&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    private final ServiceConnection mKeyguardConnection &#x3D; new ServiceConnection() &#123;</span><br><span class="line">        @Override</span><br><span class="line">        public void onServiceConnected(ComponentName name, IBinder service) &#123;</span><br><span class="line">            if (DEBUG) Log.v(TAG, &quot;*** Keyguard connected (yay!)&quot;);</span><br><span class="line">Slog.v(&quot;wx000&quot;, &quot;onServiceConnected&quot;);</span><br><span class="line">            mKeyguardService &#x3D; new KeyguardServiceWrapper(mContext,</span><br><span class="line">                    IKeyguardService.Stub.asInterface(service), mCallback);</span><br><span class="line">            if (mKeyguardState.systemIsReady) &#123;</span><br><span class="line">                &#x2F;&#x2F; If the system is ready, it means keyguard crashed and restarted.</span><br><span class="line">Slog.v(&quot;wx000&quot;, &quot;mKeyguardState.systemIsReady&quot;);</span><br><span class="line">                mKeyguardService.onSystemReady();     &#x2F;&#x2F;这里进行 锁屏 操作</span><br><span class="line">                       ...</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+
+<p>之前没修改 SystemUi 加载时间之前，也会走到这里， 不过在锁屏的时候进行了判断，如果开机向导还没结束，直接 return 不进行锁屏</p>
+<p>现在修改是在 开机向导结束后启动 SystemUi，走到这里没有 return 的条件， 所以会锁屏</p>
+<p><strong>KeyguardViewMediator.java</strong> </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">private void doKeyguardLocked(Bundle options) &#123;</span><br><span class="line">android.util.Log.v(&quot;wx000&quot;, &quot;00000000000000&quot;);</span><br><span class="line">        ...</span><br><span class="line">        &#x2F;&#x2F; In split system user mode, we never unlock system user.</span><br><span class="line">        if (!mustNotUnlockCurrentUser()</span><br><span class="line">                || !mUpdateMonitor.isDeviceProvisioned()) &#123;</span><br><span class="line"> </span><br><span class="line">            if (!lockedOrMissing &amp;&amp; shouldWaitForProvisioning()) &#123;</span><br><span class="line">                if (DEBUG) Log.d(TAG, &quot;doKeyguard: not showing because device isn&#39;t provisioned&quot;</span><br><span class="line">                        + &quot; and the sim is not locked or missing&quot;);</span><br><span class="line">                return;</span><br><span class="line">            &#125;</span><br><span class="line">               ...</span><br><span class="line">        if (DEBUG) Log.d(TAG, &quot;doKeyguard: showing the lock screen&quot;);</span><br><span class="line">        showLocked(options);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>最后决定将 SystemUI 的启动时间放在 显示状态栏界面的后面，即卡多希登陆界面的后面，在点击下一步的时候发送广播 ，启动SystemUi</p>
+<p>从log看 发广播到 锁屏判断 花费将近1s 多， 有次到5s</p>
+<p><img src="file:///C:%5CUsers%5CADMINI~1%5CAppData%5CLocal%5CTemp%5Cmsohtmlclip1%5C01%5Cclip_image002.jpg" alt="img"></p>
+
       
     </div>
 
@@ -557,6 +665,78 @@
   
   
 
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://wxyy97.com/2020/04/17/Hexo%20Command/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/wx.JPG">
+      <meta itemprop="name" content="Rain.G">
+      <meta itemprop="description" content="愿你一生努力，一生被爱">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Rain_G">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/04/17/Hexo%20Command/" class="post-title-link" itemprop="url">hexo command</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-04-17 16:01:44" itemprop="dateCreated datePublished" datetime="2020-04-17T16:01:44+08:00">2020-04-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-05-31 20:55:15" itemprop="dateModified" datetime="2020-05-31T20:55:15+08:00">2020-05-31</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>hexo clean、 hexo g、 hexo d、 hexo s</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/04/17/Hexo%20Command/">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
 
   
 
@@ -624,14 +804,14 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-count">8</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
   </nav>
