@@ -4,11 +4,74 @@
   
     
     <entry>
-      <title>Handler</title>
-      <link href="2021/04/18/Handler%E6%9C%BA%E5%88%B6/"/>
-      <url>2021/04/18/Handler%E6%9C%BA%E5%88%B6/</url>
+      <title>状态栏添加通知图标</title>
+      <link href="2021/04/22/%E7%8A%B6%E6%80%81%E6%A0%8F%E6%B7%BB%E5%8A%A0%E9%80%9A%E7%9F%A5%E5%9B%BE%E6%A0%87/"/>
+      <url>2021/04/22/%E7%8A%B6%E6%80%81%E6%A0%8F%E6%B7%BB%E5%8A%A0%E9%80%9A%E7%9F%A5%E5%9B%BE%E6%A0%87/</url>
       
-        <content type="html"><![CDATA[<h6 id="Handler机制-基本用法"><a href="#Handler机制-基本用法" class="headerlink" title="Handler机制    基本用法"></a>Handler机制    <a href="https://www.jianshu.com/p/fa1450b0bbf6" target="_blank" rel="noopener">基本用法</a></h6>]]></content>
+        <content type="html"><![CDATA[<h6 id="状态栏添加通知图标"><a href="#状态栏添加通知图标" class="headerlink" title="状态栏添加通知图标"></a>状态栏添加通知图标</h6><p><a href="https://blog.csdn.net/u012894808/article/details/106113865" target="_blank" rel="noopener">做法借鉴</a></p><p>最近做了一个添加通知图标的需求，因为之前没做过，所以借鉴了上面的做法，最终效果也实现了。其实做完发现其实并不是多难的，但是里面要学的东西也挺多的：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1、为什么要在 PhoneStatusBarPolicy.java 这个文件中进行修改，也就是需要分析下相关的流程。因为最近改状态栏的bug还挺频繁的，根据男人的第n感 觉得这个文件挺重要的，所以想借着这个来之不易的闲暇时间分析下状态栏的代码，这里就是其中的一部分。</span><br><span class="line">原因：</span><br></pre></td></tr></table></figure><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">2、在上面链接中，有“第一步声明Slot”这个步骤，虽然只是个简单的字符串，但是定义的方式没见过，而且发现同事在里面也有定义，所以这块需要学习下。</span><br><span class="line">原因：</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> Android </category>
+          
+          <category> Android bug分析 </category>
+          
+      </categories>
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>内置app</title>
+      <link href="2021/04/22/%E5%86%85%E7%BD%AEapp/"/>
+      <url>2021/04/22/%E5%86%85%E7%BD%AEapp/</url>
+      
+        <content type="html"><![CDATA[<h6 id="以UCBrowser-apk为例"><a href="#以UCBrowser-apk为例" class="headerlink" title="以UCBrowser.apk为例"></a>以UCBrowser.apk为例</h6><p>1、将app放到该目录下</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;vendor&#x2F;cells&#x2F;prebuild&#x2F;apps</span><br></pre></td></tr></table></figure><p>2、将内置应用的路径写上</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;vendor&#x2F;cells&#x2F;cells_build.mk:</span><br><span class="line">PRODUCT_COPY_FILES +&#x3D; \</span><br><span class="line">    $(LOCAL_PATH)&#x2F;prebuild&#x2F;bin&#x2F;copy_apps.sh:$(TARGET_COPY_OUT_SYSTEM)&#x2F;bin&#x2F;copy_apps.sh \</span><br><span class="line">    $(LOCAL_PATH)&#x2F;init&#x2F;copy_app.rc:$(TARGET_COPY_OUT_SYSTEM)&#x2F;etc&#x2F;init&#x2F;copy_app.rc \</span><br><span class="line">    $(LOCAL_PATH)&#x2F;prebuild&#x2F;apps&#x2F;UCBrowser.apk:$(TARGET_COPY_OUT_SYSTEM)&#x2F;pre-install&#x2F;UCBrowser.apk \   $(LOCAL_PATH)&#x2F;prebuild&#x2F;etc&#x2F;default_virtual_camera:$(TARGET_COPY_OUT_SYSTEM)&#x2F;etc&#x2F;default_virtual_camera</span><br></pre></td></tr></table></figure><p>3、同上</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;vendor&#x2F;cells&#x2F;prebuild&#x2F;bin&#x2F;copy_apps.sh:</span><br><span class="line">#!&#x2F;system&#x2F;bin&#x2F;sh</span><br><span class="line">if [ ! -f &#x2F;data&#x2F;local&#x2F;tmp&#x2F;did ]; then</span><br><span class="line">    pm install &#x2F;system&#x2F;pre-install&#x2F;UCBrowser.apk</span><br><span class="line">    echo 1 &gt; &#x2F;data&#x2F;local&#x2F;tmp&#x2F;did</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> Android </category>
+          
+          <category> Android bug分析 </category>
+          
+      </categories>
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>状态栏图标刷新</title>
+      <link href="2021/04/22/Wifi%E5%9B%BE%E6%A0%87%E5%88%B7%E6%96%B0/"/>
+      <url>2021/04/22/Wifi%E5%9B%BE%E6%A0%87%E5%88%B7%E6%96%B0/</url>
+      
+        <content type="html"><![CDATA[<p><a href="https://blog.csdn.net/weixin_45080805/article/details/109485697?utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7Edefault-6.control&dist_request_id=&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7Edefault-6.control" target="_blank" rel="noopener">状态栏图标刷新</a> + <a href="https://blog.csdn.net/Sunxiaolin2016/article/details/99584029" target="_blank" rel="noopener">图标刷新2，不全</a></p><p>这块的流程因时间问题还未分析（Search Key = “Rain.G”）</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Android </category>
+          
+          <category> Android基础知识 </category>
+          
+      </categories>
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Notification</title>
+      <link href="2021/04/22/Notification/"/>
+      <url>2021/04/22/Notification/</url>
+      
+        <content type="html"><![CDATA[<h5 id="一、基本用法："><a href="#一、基本用法：" class="headerlink" title="一、基本用法："></a>一、基本用法：</h5><h6 id="Notification-基本使用-8-0及8-0以上版本修改-注意添加通知Channel"><a href="#Notification-基本使用-8-0及8-0以上版本修改-注意添加通知Channel" class="headerlink" title="Notification 基本使用 + 8.0及8.0以上版本修改(注意添加通知Channel)"></a>Notification <a href="https://blog.csdn.net/qi85481455/article/details/82895507" target="_blank" rel="noopener">基本使用</a> + <a href="https://blog.csdn.net/yh18668197127/article/details/86299290" target="_blank" rel="noopener">8.0及8.0以上版本修改(注意添加通知Channel)</a></h6><p>在上面”基本使用”的模块使用中，发现实现不了通知的效果，原因是Android8.0 (API26) 开始要求通知设置Channel,否则会报错</p><p>注意: mipmap文件夹只放应用启动图标, 可以根据不同分辨率进行优化 , 其他需要使用的drawable资源放到对应的drawable文件夹。之前做的一次通知demo, 因为图片资源存放错误的问题，使通知栏下拉的通知图标显示灰色，导致分析bug方向出现失误。</p><h5 id="二、Bug分析："><a href="#二、Bug分析：" class="headerlink" title="二、Bug分析："></a>二、Bug分析：</h5><h6 id="bug1：第三方应用通知图标在状态栏显示为白板-改法"><a href="#bug1：第三方应用通知图标在状态栏显示为白板-改法" class="headerlink" title="bug1：第三方应用通知图标在状态栏显示为白板  改法"></a>bug1：第三方应用通知图标在状态栏显示为白板  <a href="https://blog.csdn.net/mdqwuyan/article/details/115700440?utm_medium=distribute.pc_relevant.none-task-blog-baidujs_title-1&spm=1001.2101.3001.4242" target="_blank" rel="noopener">改法</a></h6><p>注意：</p><p>​        （1） 5.0以上（不包含5.0），系统默认通知栏图标为系统启动图标，会自动将通知栏的图标（有色区域）全部填充为白色，像一个白色格子，这是Google 为了实现材料设计规范，特意为之。为了去除白色图标，镂空背景即可： 所以这之后的想要设置显示状态栏icon不为白色： 这个icon只要背景需要透明，只让内容块纯白色。</p><p>​        （2）通知栏下栏的通知区域图标为灰色，原因是系统为小图标覆盖了颜色，代码地址：</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">frameworks/base/core/java/android/app/Notification.java 里的 processSmallIconColor()</span><br></pre></td></tr></table></figure><p>这一块的相关流程因时间问题还未分析（Search Key = “Rain.G”）;</p>]]></content>
       
       
       <categories>
@@ -46,11 +109,11 @@
     
     
     <entry>
-      <title>View体系、动画</title>
-      <link href="2021/04/18/View%20%E4%BD%93%E7%B3%BB/"/>
-      <url>2021/04/18/View%20%E4%BD%93%E7%B3%BB/</url>
+      <title>AsyncTask</title>
+      <link href="2021/04/18/AsyncTask/"/>
+      <url>2021/04/18/AsyncTask/</url>
       
-        <content type="html"><![CDATA[<h6 id="View-体系，包括动画"><a href="#View-体系，包括动画" class="headerlink" title="View 体系，包括动画"></a>View 体系，包括动画</h6>]]></content>
+        <content type="html"><![CDATA[<h6 id="AsyncTask-基本使用"><a href="#AsyncTask-基本使用" class="headerlink" title="AsyncTask  基本使用"></a>AsyncTask  <a href="https://www.jianshu.com/p/ee1342fcf5e7" target="_blank" rel="noopener">基本使用</a></h6><h6 id="AsyncTask-原理及源码"><a href="#AsyncTask-原理及源码" class="headerlink" title="AsyncTask  原理及源码"></a>AsyncTask  <a href="https://www.jianshu.com/p/37502bbbb25a" target="_blank" rel="noopener">原理及源码</a></h6><p>注意: 本以为调用task.cancel(true)就可以强制结束AsyncTask，但是实际上是不可行的，因为task.cancel(true)方法仅仅是将AsyncTask的cancel标识符设置为true，仍然需要去手动停止循环</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> Void <span class="title">doInBackground</span><span class="params">(Void ...voids)</span> </span>&#123;</span><br><span class="line">      <span class="comment">// initialization ...</span></span><br><span class="line">      <span class="keyword">while</span>(<span class="keyword">true</span>) &#123;</span><br><span class="line">          <span class="keyword">if</span>(isCancelled()) <span class="comment">//这里判断标识符</span></span><br><span class="line">              <span class="keyword">break</span>;</span><br><span class="line">          <span class="comment">// do my thing ...</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// ending ...</span></span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>]]></content>
       
       
       <categories>
@@ -67,11 +130,32 @@
     
     
     <entry>
-      <title>AsyncTask</title>
-      <link href="2021/04/18/AsyncTask/"/>
-      <url>2021/04/18/AsyncTask/</url>
+      <title>Handler</title>
+      <link href="2021/04/18/Handler%E6%9C%BA%E5%88%B6/"/>
+      <url>2021/04/18/Handler%E6%9C%BA%E5%88%B6/</url>
       
-        <content type="html"><![CDATA[<h6 id="AsyncTask-基本使用"><a href="#AsyncTask-基本使用" class="headerlink" title="AsyncTask  基本使用"></a>AsyncTask  <a href="https://www.jianshu.com/p/ee1342fcf5e7" target="_blank" rel="noopener">基本使用</a></h6><h6 id="AsyncTask-原理及源码"><a href="#AsyncTask-原理及源码" class="headerlink" title="AsyncTask  原理及源码"></a>AsyncTask  <a href="https://www.jianshu.com/p/37502bbbb25a" target="_blank" rel="noopener">原理及源码</a></h6><p>注意: 本以为调用task.cancel(true)就可以强制结束AsyncTask，但是实际上是不可行的，因为task.cancel(true)方法仅仅是将AsyncTask的cancel标识符设置为true，仍然需要去手动停止循环</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> Void <span class="title">doInBackground</span><span class="params">(Void ...voids)</span> </span>&#123;</span><br><span class="line">      <span class="comment">// initialization ...</span></span><br><span class="line">      <span class="keyword">while</span>(<span class="keyword">true</span>) &#123;</span><br><span class="line">          <span class="keyword">if</span>(isCancelled()) <span class="comment">//这里判断标识符</span></span><br><span class="line">              <span class="keyword">break</span>;</span><br><span class="line">          <span class="comment">// do my thing ...</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// ending ...</span></span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>]]></content>
+        <content type="html"><![CDATA[<h6 id="Handler机制-基本用法"><a href="#Handler机制-基本用法" class="headerlink" title="Handler机制    基本用法"></a>Handler机制    <a href="https://www.jianshu.com/p/fa1450b0bbf6" target="_blank" rel="noopener">基本用法</a></h6>]]></content>
+      
+      
+      <categories>
+          
+          <category> Android </category>
+          
+          <category> Android基础知识 </category>
+          
+      </categories>
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>View体系、动画</title>
+      <link href="2021/04/18/View%20%E4%BD%93%E7%B3%BB/"/>
+      <url>2021/04/18/View%20%E4%BD%93%E7%B3%BB/</url>
+      
+        <content type="html"><![CDATA[<h6 id="View-体系，包括动画"><a href="#View-体系，包括动画" class="headerlink" title="View 体系，包括动画"></a>View 体系，包括动画</h6>]]></content>
       
       
       <categories>

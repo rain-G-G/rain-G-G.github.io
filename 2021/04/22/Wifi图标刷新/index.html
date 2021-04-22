@@ -20,20 +20,20 @@
     var CONFIG = {"hostname":"wxyy97.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="AsyncTask  原理、源码以及使用">
+  <meta name="description" content="状态栏图标刷新分析">
 <meta property="og:type" content="article">
-<meta property="og:title" content="AsyncTask">
-<meta property="og:url" content="http://wxyy97.com/2021/04/18/AsyncTask/index.html">
+<meta property="og:title" content="状态栏图标刷新">
+<meta property="og:url" content="http://wxyy97.com/2021/04/22/Wifi%E5%9B%BE%E6%A0%87%E5%88%B7%E6%96%B0/index.html">
 <meta property="og:site_name" content="Rain.G">
-<meta property="og:description" content="AsyncTask  原理、源码以及使用">
+<meta property="og:description" content="状态栏图标刷新分析">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2021-04-18T14:55:46.000Z">
-<meta property="article:modified_time" content="2021-04-18T15:59:05.064Z">
+<meta property="article:published_time" content="2021-04-22T14:29:46.000Z">
+<meta property="article:modified_time" content="2021-04-22T15:38:39.629Z">
 <meta property="article:author" content="Rain.G">
 <meta property="article:tag" content="Rain.G">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://wxyy97.com/2021/04/18/AsyncTask/">
+<link rel="canonical" href="http://wxyy97.com/2021/04/22/Wifi%E5%9B%BE%E6%A0%87%E5%88%B7%E6%96%B0/">
 
 
 <script id="page-configurations">
@@ -46,7 +46,7 @@
   };
 </script>
 
-  <title>AsyncTask | Rain.G</title>
+  <title>状态栏图标刷新 | Rain.G</title>
   
 
 
@@ -182,7 +182,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://wxyy97.com/2021/04/18/AsyncTask/">
+    <link itemprop="mainEntityOfPage" href="http://wxyy97.com/2021/04/22/Wifi%E5%9B%BE%E6%A0%87%E5%88%B7%E6%96%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/wx.JPG">
@@ -195,7 +195,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          AsyncTask
+          状态栏图标刷新
         </h1>
 
         <div class="post-meta">
@@ -206,7 +206,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2021-04-18 22:55:46 / Modified: 23:59:05" itemprop="dateCreated datePublished" datetime="2021-04-18T22:55:46+08:00">2021-04-18</time>
+              <time title="Created: 2021-04-22 22:29:46 / Modified: 23:38:39" itemprop="dateCreated datePublished" datetime="2021-04-22T22:29:46+08:00">2021-04-22</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -223,7 +223,7 @@
             </span>
 
           
-            <div class="post-description">AsyncTask  原理、源码以及使用</div>
+            <div class="post-description">状态栏图标刷新分析</div>
 
         </div>
       </header>
@@ -234,9 +234,8 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h6 id="AsyncTask-基本使用"><a href="#AsyncTask-基本使用" class="headerlink" title="AsyncTask  基本使用"></a>AsyncTask  <a href="https://www.jianshu.com/p/ee1342fcf5e7" target="_blank" rel="noopener">基本使用</a></h6><h6 id="AsyncTask-原理及源码"><a href="#AsyncTask-原理及源码" class="headerlink" title="AsyncTask  原理及源码"></a>AsyncTask  <a href="https://www.jianshu.com/p/37502bbbb25a" target="_blank" rel="noopener">原理及源码</a></h6><p>注意: 本以为调用task.cancel(true)就可以强制结束AsyncTask，但是实际上是不可行的，因为task.cancel(true)方法仅仅是将AsyncTask的cancel标识符设置为true，仍然需要去手动停止循环</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> Void <span class="title">doInBackground</span><span class="params">(Void ...voids)</span> </span>&#123;</span><br><span class="line">      <span class="comment">// initialization ...</span></span><br><span class="line">      <span class="keyword">while</span>(<span class="keyword">true</span>) &#123;</span><br><span class="line">          <span class="keyword">if</span>(isCancelled()) <span class="comment">//这里判断标识符</span></span><br><span class="line">              <span class="keyword">break</span>;</span><br><span class="line">          <span class="comment">// do my thing ...</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// ending ...</span></span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
-
+        <p><a href="https://blog.csdn.net/weixin_45080805/article/details/109485697?utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7Edefault-6.control&dist_request_id=&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7Edefault-6.control" target="_blank" rel="noopener">状态栏图标刷新</a> + <a href="https://blog.csdn.net/Sunxiaolin2016/article/details/99584029" target="_blank" rel="noopener">图标刷新2，不全</a></p>
+<p>这块的流程因时间问题还未分析（Search Key = “Rain.G”）</p>
 
     </div>
 
@@ -252,12 +251,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/04/18/Handler%E6%9C%BA%E5%88%B6/" rel="prev" title="Handler">
-      <i class="fa fa-chevron-left"></i> Handler
+    <a href="/2021/04/22/Notification/" rel="prev" title="Notification">
+      <i class="fa fa-chevron-left"></i> Notification
     </a></div>
       <div class="post-nav-item">
-    <a href="/2021/04/18/Activity/" rel="next" title="Activity">
-      Activity <i class="fa fa-chevron-right"></i>
+    <a href="/2021/04/22/%E5%86%85%E7%BD%AEapp/" rel="next" title="内置app">
+      内置app <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -317,7 +316,6 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-6"><a class="nav-link" href="#AsyncTask-基本使用"><span class="nav-number">1.</span> <span class="nav-text">AsyncTask  基本使用</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#AsyncTask-原理及源码"><span class="nav-number">2.</span> <span class="nav-text">AsyncTask  原理及源码</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
