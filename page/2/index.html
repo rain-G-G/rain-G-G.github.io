@@ -179,91 +179,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://wxyy97.com/2021/04/12/android-start/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/wx.JPG">
-      <meta itemprop="name" content="Rain.G">
-      <meta itemprop="description" content="愿你一生努力，一生被爱">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Rain.G">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/04/12/android-start/" class="post-title-link" itemprop="url">android start</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-04-12 22:48:46" itemprop="dateCreated datePublished" datetime="2021-04-12T22:48:46+08:00">2021-04-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-04-22 23:03:55" itemprop="dateModified" datetime="2021-04-22T23:03:55+08:00">2021-04-22</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/Android%E6%A1%86%E6%9E%B6%E5%B1%82/" itemprop="url" rel="index"><span itemprop="name">Android框架层</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>这篇主要是解决开机向导中闪状态栏和导航栏的bug，一种方案就是延迟SystemUI的加载时间，虽然这种方案因改动太大而且带来许多小问题 最终被否定，但在这里还是要简单分析下相关的流程。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/04/12/android-start/">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://wxyy97.com/2021/07/08/u%E7%9B%98%E6%9F%A5%E8%AF%A2%E5%A4%A7%E5%B0%8F%E9%80%9F%E5%BA%A6%E6%85%A2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -437,6 +352,91 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">processSmallIconColor</span><span class="params">(Icon smallIcon, RemoteViews contentView,</span></span></span><br><span class="line"><span class="function"><span class="params">               StandardTemplateParams p)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">boolean</span> colorable = !isLegacy() || getColorUtil().isGrayscaleIcon(mContext, smallIcon);<span class="comment">//是否上色，依据是否5.0以上以及灰色图</span></span><br><span class="line">    <span class="comment">//add by wangxin</span></span><br><span class="line">    ApplicationInfo applicationInfo = contentView.mApplication;</span><br><span class="line">    <span class="keyword">boolean</span> isSystemApp = applicationInfo.isSystemApp();</span><br><span class="line">    String packageName = applicationInfo.packageName;</span><br><span class="line">    android.util.Log.v(TAG, <span class="string">"isSystemApp = "</span> + isSystemApp + <span class="string">" packageName = "</span> + packageName );</span><br><span class="line">    colorable = isSystemApp ? <span class="keyword">true</span> : <span class="keyword">false</span>;</span><br><span class="line">    <span class="keyword">if</span> (<span class="string">"com.baidu.input_huawei"</span>.equals(packageName) || <span class="string">"com.cadothy.broadcast"</span>.equals(packageName)) &#123;<span class="comment">//特殊app</span></span><br><span class="line">        colorable = <span class="keyword">false</span>;</span><br><span class="line">    &#125;<span class="comment">//add end</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> color;</span><br><span class="line">    <span class="keyword">if</span> (isColorized(p)) &#123;</span><br><span class="line">        color = getPrimaryTextColor(p);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    contentView.setInt(R.id.notification_header, <span class="string">"setOriginalIconColor"</span>,</span><br><span class="line">                       colorable ? color : NotificationHeaderView.NO_COLOR);</span><br><span class="line">    colorable ? color : COLOR_DEFAULT);<span class="comment">//mod by wangxin</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://wxyy97.com/2021/04/12/android-start/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/wx.JPG">
+      <meta itemprop="name" content="Rain.G">
+      <meta itemprop="description" content="愿你一生努力，一生被爱">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Rain.G">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/04/12/android-start/" class="post-title-link" itemprop="url">android start</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-04-12 22:48:46" itemprop="dateCreated datePublished" datetime="2021-04-12T22:48:46+08:00">2021-04-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-04-22 23:03:55" itemprop="dateModified" datetime="2021-04-22T23:03:55+08:00">2021-04-22</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Android%E6%A1%86%E6%9E%B6%E5%B1%82/" itemprop="url" rel="index"><span itemprop="name">Android框架层</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>这篇主要是解决开机向导中闪状态栏和导航栏的bug，一种方案就是延迟SystemUI的加载时间，虽然这种方案因改动太大而且带来许多小问题 最终被否定，但在这里还是要简单分析下相关的流程。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/04/12/android-start/">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
