@@ -28,7 +28,7 @@
 <meta property="og:description" content="最近遇到的一个bug：文件管理中插入u盘后，偶现侧边栏内部存储和u盘界面消失，分析后原因是查询u盘剩余空间大小速度太慢（20～30s），随后发现除了这里，其实设置中&quot;存储&quot;和进入文件管理u盘文件里面，也有查询u盘大小的地方，如果插入u盘立即点开这俩个界面，会出现黑屏。这块将相关流程和解决办法记录下，方便以后查询。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2021-07-08T13:24:25.000Z">
-<meta property="article:modified_time" content="2021-07-08T23:45:33.438Z">
+<meta property="article:modified_time" content="2021-07-09T13:19:49.466Z">
 <meta property="article:author" content="Rain.G">
 <meta property="article:tag" content="Rain.G">
 <meta name="twitter:card" content="summary">
@@ -212,7 +212,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-07-09 07:45:33" itemprop="dateModified" datetime="2021-07-09T07:45:33+08:00">2021-07-09</time>
+                <time title="Modified: 2021-07-09 21:19:49" itemprop="dateModified" datetime="2021-07-09T21:19:49+08:00">2021-07-09</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -240,8 +240,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>最近遇到的一个bug：文件管理中插入u盘后，偶现侧边栏内部存储和u盘界面消失，分析后原因是查询u盘剩余空间大小速度太慢（20～30s），随后发现除了这里，其实设置中”存储”和进入文件管理u盘文件里面，也有查询u盘大小的地方，如果插入u盘立即点开这俩个界面，会出现黑屏。这块将相关流程和解决办法记录下，方便以后查询。</p>
-<h6 id="一、俩个问题出现的原因："><a href="#一、俩个问题出现的原因：" class="headerlink" title="一、俩个问题出现的原因："></a>一、俩个问题出现的原因：</h6><p>1、文件管理中插入u盘后，偶现侧边栏内部存储和u盘界面消失：设置了provider查询时间限制20s，超时后cursor返不回去。</p>
+        <h6 id="一、俩个问题出现的原因："><a href="#一、俩个问题出现的原因：" class="headerlink" title="一、俩个问题出现的原因："></a>一、俩个问题出现的原因：</h6><p>1、文件管理中插入u盘后，偶现侧边栏内部存储和u盘界面消失：设置了provider查询时间限制20s，超时后cursor返不回去。</p>
 <p>2、设置中”存储”和进入文件管理u盘文件里面 出现黑屏：主线程查询大小导致阻塞。</p>
 <h6 id="二、解决办法："><a href="#二、解决办法：" class="headerlink" title="二、解决办法："></a>二、解决办法：</h6><ul>
 <li>问题1：最简单的就是延长或取消查询时间限制，但是俺家产品为了用户体验，后台查询时须给用户提示，查询结束后显示结果。是不是觉得简单？后来自闭了… 解决办法问大佬，一块研究了好长时间，最后确定用 “二次查询”这个方法，下面单独说。</li>
@@ -379,7 +378,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-count">18</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
