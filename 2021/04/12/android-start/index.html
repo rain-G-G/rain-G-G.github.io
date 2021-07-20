@@ -27,13 +27,11 @@
 <meta property="og:site_name" content="Rain.G">
 <meta property="og:description" content="这篇主要是解决开机向导中闪状态栏和导航栏的bug，一种方案就是延迟SystemUI的加载时间，虽然这种方案因改动太大而且带来许多小问题 最终被否定，但在这里还是要简单分析下相关的流程。">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="d:%5Cblog%5Csource%5Cimage%5Cimage_fenping.jpg">
 <meta property="article:published_time" content="2021-04-12T14:48:46.000Z">
-<meta property="article:modified_time" content="2021-04-22T15:03:55.875Z">
+<meta property="article:modified_time" content="2021-07-20T13:09:03.620Z">
 <meta property="article:author" content="Rain.G">
 <meta property="article:tag" content="Rain.G">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="d:%5Cblog%5Csource%5Cimage%5Cimage_fenping.jpg">
 
 <link rel="canonical" href="http://wxyy97.com/2021/04/12/android-start/">
 
@@ -214,7 +212,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-04-22 23:03:55" itemprop="dateModified" datetime="2021-04-22T23:03:55+08:00">2021-04-22</time>
+                <time title="Modified: 2021-07-20 21:09:03" itemprop="dateModified" datetime="2021-07-20T21:09:03+08:00">2021-07-20</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -254,11 +252,8 @@
 <p><strong>SystemUIApplication.java</strong> </p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public void startServicesIfNeeded() &#123;</span><br><span class="line">        String[] names &#x3D; getResources().getStringArray(R.array.config_systemUIServiceComponents);</span><br><span class="line">        startServicesIfNeeded(names);</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">---------config.xml ------------</span><br><span class="line">...</span><br><span class="line">&lt;item&gt;com.android.systemui.SystemBars&lt;&#x2F;item&gt;</span><br><span class="line"> </span><br><span class="line">&lt;item&gt;com.android.systemui.usb.StorageNotification&lt;&#x2F;item&gt;</span><br><span class="line"> </span><br><span class="line">&lt;item&gt;com.android.systemui.power.PowerUI&lt;&#x2F;item&gt;</span><br><span class="line">...</span><br><span class="line"> </span><br><span class="line">&#x2F;&#x2F;从config.xml文件获取组件的名称，状态栏和导航栏就是从这里获取并启动。</span><br></pre></td></tr></table></figure>
 
-<p>这里将SystemUI直接屏蔽，发现开机向导还是会出现状态栏和导航栏；</p>
-<p>分析原因后知道是 KeyguardService 启动了上面提到的SystemUi小组件</p>
-<p>以上就是基本的流程，现在的方案如下：</p>
-<p>1、延迟SystemUI加载的时间，即开机向导结束后发广播启动SystemUI</p>
-<p>2、KeyguardService延迟启动SystemUi组件</p>
+<p>这里将SystemUI直接屏蔽，发现开机向导还是会出现状态栏和导航栏；<br>分析原因后知道是 KeyguardService 启动了上面提到的SystemUi小组件</p>
+<p>以上就是基本的流程，现在的方案如下：<br>1、延迟SystemUI加载的时间，即开机向导结束后发广播启动SystemUI<br>2、KeyguardService延迟启动SystemUi组件</p>
 <p><strong>延迟SystemUI加载方案：</strong> </p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">private void startOtherServices() &#123;</span><br><span class="line">        ...</span><br><span class="line">        mActivityManagerService.systemReady(() -&gt; &#123;</span><br><span class="line">               ...</span><br><span class="line">               &#x2F;**traceBeginAndSlog(&quot;StartSystemUI&quot;);</span><br><span class="line">            try &#123;</span><br><span class="line">                startSystemUi(context, windowManagerF);   &#x2F;&#x2F;启动systemUi</span><br><span class="line">            &#125; catch (Throwable e) &#123;</span><br><span class="line">                reportWtf(&quot;starting System UI&quot;, e);</span><br><span class="line">            &#125;</span><br><span class="line">            traceEnd();*&#x2F;</span><br><span class="line">               if(Settings.Global.getInt(getBaseContext().getContentResolver(), &quot;device_provisioned&quot;) &#x3D;&#x3D; 1)&#123;</span><br><span class="line">                       startSystemUi(context, windowManagerF);</span><br><span class="line">               &#125;</span><br><span class="line">               BroadcastReceiver startSystemUIReceiver &#x3D; new BroadcastReceiver() &#123;</span><br><span class="line">        @Override</span><br><span class="line">        public void onReceive(Context context, Intent intent) &#123;</span><br><span class="line">            if (&quot;com.guyu.action.START_SYSTEMUI&quot;.equals(intent.getAction())) &#123;</span><br><span class="line">               Slog.v(&quot;wx6&quot;, &quot;SystemServer receive com.guyu.action.START_SYSTEMUI&quot;);</span><br><span class="line">                       startSystemUi(context, windowManagerF);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">               IntentFilter filter &#x3D; new IntentFilter();</span><br><span class="line">               filter.addAction(&quot;com.guyu.action.START_SYSTEMUI&quot;);</span><br><span class="line">        context.registerReceiver(startSystemUIReceiver, filter);</span><br><span class="line">               ...</span><br><span class="line">        </span><br><span class="line">        &#125;,BOOT_TIMINGS_TRACE_LOG);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -274,18 +269,13 @@
 <p><strong>keyguardDelegate.java</strong> </p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">public void bindService(Context context) &#123;</span><br><span class="line">        ...</span><br><span class="line">        final ComponentName keyguardComponent &#x3D; ComponentName.unflattenFromString(</span><br><span class="line">                resources.getString(com.android.internal.R.string.config_keyguardComponent)); &#x2F;&#x2F;KeyguardService</span><br><span class="line">        intent.addFlags(Intent.FLAG_DEBUG_TRIAGED_MISSING);</span><br><span class="line">        intent.setComponent(keyguardComponent);</span><br><span class="line"> </span><br><span class="line">        if (!context.bindServiceAsUser(intent, mKeyguardConnection,</span><br><span class="line">                Context.BIND_AUTO_CREATE, mHandler, UserHandle.SYSTEM)) &#123;</span><br><span class="line">            Log.v(TAG, &quot;*** Keyguard: can&#39;t bind to &quot; + keyguardComponent);</span><br><span class="line">                       ...</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            if (DEBUG) Log.v(TAG, &quot;*** Keyguard started&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    private final ServiceConnection mKeyguardConnection &#x3D; new ServiceConnection() &#123;</span><br><span class="line">        @Override</span><br><span class="line">        public void onServiceConnected(ComponentName name, IBinder service) &#123;</span><br><span class="line">            if (DEBUG) Log.v(TAG, &quot;*** Keyguard connected (yay!)&quot;);</span><br><span class="line">Slog.v(&quot;wx000&quot;, &quot;onServiceConnected&quot;);</span><br><span class="line">            mKeyguardService &#x3D; new KeyguardServiceWrapper(mContext,</span><br><span class="line">                    IKeyguardService.Stub.asInterface(service), mCallback);</span><br><span class="line">            if (mKeyguardState.systemIsReady) &#123;</span><br><span class="line">                &#x2F;&#x2F; If the system is ready, it means keyguard crashed and restarted.</span><br><span class="line">Slog.v(&quot;wx000&quot;, &quot;mKeyguardState.systemIsReady&quot;);</span><br><span class="line">                mKeyguardService.onSystemReady();     &#x2F;&#x2F;这里进行 锁屏 操作</span><br><span class="line">                       ...</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
 
-<p>之前没修改 SystemUi 加载时间之前，也会走到这里， 不过在锁屏的时候进行了判断，如果开机向导还没结束，直接 return 不进行锁屏</p>
-<p>现在修改是在 开机向导结束后启动 SystemUi，走到这里没有 return 的条件， 所以会锁屏</p>
+<p>之前没修改 SystemUi 加载时间之前，也会走到这里， 不过在锁屏的时候进行了判断，如果开机向导还没结束，直接 return 不进行锁屏，现在修改是在 开机向导结束后启动 SystemUi，走到这里没有 return 的条件， 所以会锁屏。</p>
 <p><strong>KeyguardViewMediator.java</strong> </p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">private void doKeyguardLocked(Bundle options) &#123;</span><br><span class="line">android.util.Log.v(&quot;wx000&quot;, &quot;00000000000000&quot;);</span><br><span class="line">        ...</span><br><span class="line">        &#x2F;&#x2F; In split system user mode, we never unlock system user.</span><br><span class="line">        if (!mustNotUnlockCurrentUser()</span><br><span class="line">                || !mUpdateMonitor.isDeviceProvisioned()) &#123;</span><br><span class="line"> </span><br><span class="line">            if (!lockedOrMissing &amp;&amp; shouldWaitForProvisioning()) &#123;</span><br><span class="line">                if (DEBUG) Log.d(TAG, &quot;doKeyguard: not showing because device isn&#39;t provisioned&quot;</span><br><span class="line">                        + &quot; and the sim is not locked or missing&quot;);</span><br><span class="line">                return;</span><br><span class="line">            &#125;</span><br><span class="line">               ...</span><br><span class="line">        if (DEBUG) Log.d(TAG, &quot;doKeyguard: showing the lock screen&quot;);</span><br><span class="line">        showLocked(options);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
 
 
-<p>最后决定将 SystemUI 的启动时间放在 显示状态栏界面的后面，即登陆界面的后面，在点击下一步的时候发送广播 ，启动SystemUi</p>
-<p>从log看 发广播到 锁屏判断 花费将近1s 多， 有次到5s</p>
-
-
-<p><img src="D:%5Cblog%5Csource%5Cimage%5Cimage_fenping.jpg" alt="img"></p>
+<p>最后决定将 SystemUI 的启动时间放在 显示状态栏界面的后面，即登陆界面的后面，在点击下一步的时候发送广播 ，启动SystemUi，从log看 发广播到 锁屏判断 花费将近1s 多， 有次到5s</p>
 
     </div>
 
@@ -381,7 +371,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-count">19</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
