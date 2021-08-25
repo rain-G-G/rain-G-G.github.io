@@ -300,11 +300,11 @@
     
     
     <entry>
-      <title>Activity</title>
-      <link href="2021/04/18/Activity/"/>
-      <url>2021/04/18/Activity/</url>
+      <title>AsyncTask</title>
+      <link href="2021/04/18/AsyncTask/"/>
+      <url>2021/04/18/AsyncTask/</url>
       
-        <content type="html"><![CDATA[<h6 id="Activity-生命周期、状态-使用"><a href="#Activity-生命周期、状态-使用" class="headerlink" title="Activity 生命周期、状态   使用"></a>Activity 生命周期、状态   <a href="https://blog.csdn.net/qq_36270361/article/details/107141162" target="_blank" rel="noopener">使用</a></h6>]]></content>
+        <content type="html"><![CDATA[<h6 id="AsyncTask-基本使用"><a href="#AsyncTask-基本使用" class="headerlink" title="AsyncTask  基本使用"></a>AsyncTask  <a href="https://www.jianshu.com/p/ee1342fcf5e7" target="_blank" rel="noopener">基本使用</a></h6><h6 id="AsyncTask-原理及源码"><a href="#AsyncTask-原理及源码" class="headerlink" title="AsyncTask  原理及源码"></a>AsyncTask  <a href="https://www.jianshu.com/p/37502bbbb25a" target="_blank" rel="noopener">原理及源码</a></h6><p>注意: 本以为调用task.cancel(true)就可以强制结束AsyncTask，但是实际上是不可行的，因为task.cancel(true)方法仅仅是将AsyncTask的cancel标识符设置为true，仍然需要去手动停止循环</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> Void <span class="title">doInBackground</span><span class="params">(Void ...voids)</span> </span>&#123;</span><br><span class="line">      <span class="comment">// initialization ...</span></span><br><span class="line">      <span class="keyword">while</span>(<span class="keyword">true</span>) &#123;</span><br><span class="line">          <span class="keyword">if</span>(isCancelled()) <span class="comment">//这里判断标识符</span></span><br><span class="line">              <span class="keyword">break</span>;</span><br><span class="line">          <span class="comment">// do my thing ...</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// ending ...</span></span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>]]></content>
       
       
       <categories>
@@ -321,11 +321,11 @@
     
     
     <entry>
-      <title>AsyncTask</title>
-      <link href="2021/04/18/AsyncTask/"/>
-      <url>2021/04/18/AsyncTask/</url>
+      <title>Activity</title>
+      <link href="2021/04/18/Activity/"/>
+      <url>2021/04/18/Activity/</url>
       
-        <content type="html"><![CDATA[<h6 id="AsyncTask-基本使用"><a href="#AsyncTask-基本使用" class="headerlink" title="AsyncTask  基本使用"></a>AsyncTask  <a href="https://www.jianshu.com/p/ee1342fcf5e7" target="_blank" rel="noopener">基本使用</a></h6><h6 id="AsyncTask-原理及源码"><a href="#AsyncTask-原理及源码" class="headerlink" title="AsyncTask  原理及源码"></a>AsyncTask  <a href="https://www.jianshu.com/p/37502bbbb25a" target="_blank" rel="noopener">原理及源码</a></h6><p>注意: 本以为调用task.cancel(true)就可以强制结束AsyncTask，但是实际上是不可行的，因为task.cancel(true)方法仅仅是将AsyncTask的cancel标识符设置为true，仍然需要去手动停止循环</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> Void <span class="title">doInBackground</span><span class="params">(Void ...voids)</span> </span>&#123;</span><br><span class="line">      <span class="comment">// initialization ...</span></span><br><span class="line">      <span class="keyword">while</span>(<span class="keyword">true</span>) &#123;</span><br><span class="line">          <span class="keyword">if</span>(isCancelled()) <span class="comment">//这里判断标识符</span></span><br><span class="line">              <span class="keyword">break</span>;</span><br><span class="line">          <span class="comment">// do my thing ...</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// ending ...</span></span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>]]></content>
+        <content type="html"><![CDATA[<h6 id="Activity-生命周期、状态-使用"><a href="#Activity-生命周期、状态-使用" class="headerlink" title="Activity 生命周期、状态   使用"></a>Activity 生命周期、状态   <a href="https://blog.csdn.net/qq_36270361/article/details/107141162" target="_blank" rel="noopener">使用</a></h6>]]></content>
       
       
       <categories>
