@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wxyy97.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="在平时的Android开发过程中，经常需要实现APP挂后台一直存活不会被系统杀掉进程，这也就是我们常说的service保活。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="service保活">
+<meta property="og:url" content="http://wxyy97.com/2021/09/08/service%E4%BF%9D%E6%B4%BB/index.html">
+<meta property="og:site_name" content="Rain.G">
+<meta property="og:description" content="在平时的Android开发过程中，经常需要实现APP挂后台一直存活不会被系统杀掉进程，这也就是我们常说的service保活。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-09-08T13:48:49.000Z">
+<meta property="article:modified_time" content="2021-09-08T13:50:42.294Z">
+<meta property="article:author" content="Rain.G">
+<meta property="article:tag" content="Rain.G">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://wxyy97.com/2021/09/08/service%E4%BF%9D%E6%B4%BB/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>service保活 | Rain.G</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Rain.G</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Rain.G</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/rain-G-G" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://wxyy97.com/2021/09/08/service%E4%BF%9D%E6%B4%BB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/wx.JPG">
+      <meta itemprop="name" content="Rain.G">
+      <meta itemprop="description" content="愿你一生努力，一生被爱">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Rain.G">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          service保活
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-09-08 21:48:49 / Modified: 21:50:42" itemprop="dateCreated datePublished" datetime="2021-09-08T21:48:49+08:00">2021-09-08</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Android-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" itemprop="url" rel="index"><span itemprop="name">Android 基础知识</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">在平时的Android开发过程中，经常需要实现APP挂后台一直存活不会被系统杀掉进程，这也就是我们常说的service保活。</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h5 id="一、保活方案："><a href="#一、保活方案：" class="headerlink" title="一、保活方案："></a>一、保活方案：</h5><ul>
+<li>一、进程提权</li>
+<li>二、双进程守护</li>
+<li>三、JobService 应用退出后重启service</li>
+<li>四、注册特殊广播 保证service在开机后自启动</li>
+<li>五、WakeLock的使用 息屏后不被释放资源杀死</li>
+<li>六、加入电量白名单，跳过电量优化</li>
+<li>七、在多任务列表源码里隐藏该app界面或清理时过滤该包名</li>
+<li>八、一些小操作方法</li>
+</ul>
+<h6 id="一、进程提权"><a href="#一、进程提权" class="headerlink" title="一、进程提权"></a>一、进程提权</h6><blockquote>
+<p>在Android的lowmemroykiller(进程回收)机制中，adj值越小的进程越不容易被杀死，相对普通进程来说能让adj去到0显然是最完美的，Android给了Service这样一个功能：startForeground(); <a href="https://www.cnblogs.com/tiger-wang-ms/p/6491429.html" target="_blank" rel="noopener">进程adj的概念</a>。系统lowmemeorykiller机制下对于进程的级别的以变量的形式定义在framework/base/core/java/com/android/server/am/ProcessList.java类中</p>
+</blockquote>
+<h6 id="二、双进程守护（先放着-没理解Aidl在此处的作用）"><a href="#二、双进程守护（先放着-没理解Aidl在此处的作用）" class="headerlink" title="二、双进程守护（先放着 没理解Aidl在此处的作用）"></a>二、双进程守护（先放着 没理解Aidl在此处的作用）</h6><blockquote>
+<p>通过Aidl文件，主服务启动的时候绑定守护服务，断开的时候启动守护服务 重启主服务、重新绑定</p>
+</blockquote>
+<p>1、新建ProcessConnection.aidl实现跨进程通信：</p>
+<p>2、创建主服务：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StepService</span> <span class="keyword">extends</span> <span class="title">Service</span></span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> IBinder <span class="title">onBind</span><span class="params">(Intent intent)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ProcessConnection.Stub() &#123;&#125;;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">onStartCommand</span><span class="params">(Intent intent, <span class="keyword">int</span> flags, <span class="keyword">int</span> startId)</span> </span>&#123;</span><br><span class="line">        startForeground(<span class="number">1</span>,<span class="keyword">new</span> Notification());<span class="comment">//该创建前台的服务方法有问题</span></span><br><span class="line">        <span class="comment">//绑定建立连接</span></span><br><span class="line">        bindService(<span class="keyword">new</span> Intent(<span class="keyword">this</span>,GuardService<span class="class">.<span class="keyword">class</span>),</span></span><br><span class="line"><span class="class">                <span class="title">mServiceConnection</span>, <span class="title">Context</span>.<span class="title">BIND_IMPORTANT</span>)</span>;</span><br><span class="line">        <span class="keyword">return</span> START_STICKY;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">private</span> ServiceConnection mServiceConnection = <span class="keyword">new</span> ServiceConnection() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onServiceConnected</span><span class="params">(ComponentName componentName, IBinder iBinder)</span> </span>&#123;</span><br><span class="line">            <span class="comment">//连接上</span></span><br><span class="line">            Log.d(<span class="string">"test"</span>,<span class="string">"StepService:建立链接"</span>);</span><br><span class="line">        &#125;</span><br><span class="line"> </span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onServiceDisconnected</span><span class="params">(ComponentName componentName)</span> </span>&#123;</span><br><span class="line">            <span class="comment">//断开连接</span></span><br><span class="line">            startService(<span class="keyword">new</span> Intent(StepService.<span class="keyword">this</span>,GuardService<span class="class">.<span class="keyword">class</span>))</span>;</span><br><span class="line">            <span class="comment">//重新绑定</span></span><br><span class="line">            bindService(<span class="keyword">new</span> Intent(StepService.<span class="keyword">this</span>,GuardService<span class="class">.<span class="keyword">class</span>),</span></span><br><span class="line"><span class="class">                    <span class="title">mServiceConnection</span>, <span class="title">Context</span>.<span class="title">BIND_IMPORTANT</span>)</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>3、守护服务</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GuardService</span> <span class="keyword">extends</span> <span class="title">Service</span></span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> IBinder <span class="title">onBind</span><span class="params">(Intent intent)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ProcessConnection.Stub() &#123;&#125;;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">onStartCommand</span><span class="params">(Intent intent, <span class="keyword">int</span> flags, <span class="keyword">int</span> startId)</span> </span>&#123;</span><br><span class="line">        startForeground(<span class="number">1</span>,<span class="keyword">new</span> Notification());<span class="comment">//该创建前台的服务方法有问题</span></span><br><span class="line">        <span class="comment">//绑定建立连接</span></span><br><span class="line">        bindService(<span class="keyword">new</span> Intent(<span class="keyword">this</span>,StepService<span class="class">.<span class="keyword">class</span>),</span></span><br><span class="line"><span class="class">                <span class="title">mServiceConnection</span>, <span class="title">Context</span>.<span class="title">BIND_IMPORTANT</span>)</span>;</span><br><span class="line">        <span class="keyword">return</span> START_STICKY;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">private</span> ServiceConnection mServiceConnection = <span class="keyword">new</span> ServiceConnection() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onServiceConnected</span><span class="params">(ComponentName componentName, IBinder iBinder)</span> </span>&#123;</span><br><span class="line">            <span class="comment">//连接上</span></span><br><span class="line">            Log.d(<span class="string">"test"</span>,<span class="string">"GuardService:建立连接"</span>);</span><br><span class="line">        &#125;</span><br><span class="line"> </span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onServiceDisconnected</span><span class="params">(ComponentName componentName)</span> </span>&#123;</span><br><span class="line">            <span class="comment">//断开连接</span></span><br><span class="line">            startService(<span class="keyword">new</span> Intent(GuardService.<span class="keyword">this</span>,StepService<span class="class">.<span class="keyword">class</span>))</span>;</span><br><span class="line">            <span class="comment">//重新绑定</span></span><br><span class="line">            bindService(<span class="keyword">new</span> Intent(GuardService.<span class="keyword">this</span>,StepService<span class="class">.<span class="keyword">class</span>),</span></span><br><span class="line"><span class="class">                    <span class="title">mServiceConnection</span>, <span class="title">Context</span>.<span class="title">BIND_IMPORTANT</span>)</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>返回参数含义：</p>
+<ul>
+<li>START_STICKY：在Service被关闭后,重新开启Service</li>
+<li>START_NOT_STICKY：服务被异常杀掉后，系统将会被设置为started状态，系统不会重启该服务，直到startService(Intent intent)方法再次被调用。</li>
+<li>START_REDELIVER_INTENT：重传Intent，使用这个返回值时，如果在执行完onStartCommand后，服务被异常kill掉，系统会自动重启该服务,并将Intent的值传入。</li>
+<li>START_STICKY_COMPATIBILITY：START_STICKY的兼容版本，但不保证服务被kill后一定能重启。</li>
+</ul>
+<h6 id="三、使用JobService来实现应用退出后重启Service"><a href="#三、使用JobService来实现应用退出后重启Service" class="headerlink" title="三、使用JobService来实现应用退出后重启Service"></a>三、使用JobService来实现应用退出后重启Service</h6><blockquote>
+<p>JobService也是一个service，和普通的service不同的是，JobService是一个任务回调类，通过JobScheduler设置任务给系统，系统来调用JobService中的方法，具体处理什么任务需要我们自己在JobService中的回调方法中实现。那么关于任务的管理和进程的维护、调度当然是由系统来统一管理。<br>Google从Android SDK 21之后添加了JobScheduler来执行一些满足特定条件但不紧急的后台任务，我们可以利用JobScheduler来执行这些特殊的后台任务时来减少电量的消耗。</p>
+</blockquote>
+<p>1、使用JobService来实现APP进程防杀， 首先声明权限</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;service</span><br><span class="line">    android:name=<span class="string">".MyJobDaemonService"</span></span><br><span class="line">    android:enabled=<span class="string">"true"</span></span><br><span class="line">    android:exported=<span class="string">"true"</span></span><br><span class="line">    android:permission=<span class="string">"android.permission.BIND_JOB_SERVICE"</span> /&gt;</span><br></pre></td></tr></table></figure>
+
+<p>2、自定义一个Service类，继承自JobService</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TargetApi</span>(Build.VERSION_CODES.LOLLIPOP)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyJobDaemonService</span> <span class="keyword">extends</span> <span class="title">JobService</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> kJobId = <span class="number">0</span>;</span><br><span class="line"> </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">onStartCommand</span><span class="params">(Intent intent, <span class="keyword">int</span> flags, <span class="keyword">int</span> startId)</span> </span>&#123;</span><br><span class="line">        Log.i(<span class="string">"MyJobDaemonService"</span>, <span class="string">"jobService启动"</span>);</span><br><span class="line">        scheduleJob(getJobInfo());</span><br><span class="line">        <span class="keyword">return</span> START_NOT_STICKY;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onStartJob</span><span class="params">(JobParameters params)</span> </span>&#123;</span><br><span class="line">        Log.i(<span class="string">"MyJobDaemonService"</span>, <span class="string">"执行了onStartJob方法"</span>);</span><br><span class="line">        <span class="keyword">boolean</span> isLocalServiceWork = isServiceWork(<span class="keyword">this</span>, <span class="string">"com.marswin89.marsdaemon.demo.Service1"</span>);</span><br><span class="line">        <span class="keyword">boolean</span> isRemoteServiceWork = isServiceWork(<span class="keyword">this</span>, <span class="string">"com.marswin89.marsdaemon.demo.Service2"</span>);</span><br><span class="line">        <span class="keyword">if</span>(!isLocalServiceWork||</span><br><span class="line">                !isRemoteServiceWork)&#123;</span><br><span class="line">            <span class="keyword">this</span>.startService(<span class="keyword">new</span> Intent(<span class="keyword">this</span>,Service1<span class="class">.<span class="keyword">class</span>))</span>;</span><br><span class="line">            <span class="comment">//this.startService(new Intent(this,Service2.class));</span></span><br><span class="line">            <span class="comment">//Toast.makeText(this, "进程启动", Toast.LENGTH_SHORT).show();</span></span><br><span class="line">            Log.i(<span class="string">"onStartJob"</span>, <span class="string">"启动service1"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onStopJob</span><span class="params">(JobParameters params)</span> </span>&#123;</span><br><span class="line">        Log.i(<span class="string">"MyJobDaemonService"</span>, <span class="string">"执行了onStopJob方法"</span>);</span><br><span class="line">        scheduleJob(getJobInfo());</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//将任务作业发送到作业调度中去</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">scheduleJob</span><span class="params">(JobInfo t)</span> </span>&#123;</span><br><span class="line">        Log.i(<span class="string">"MyJobDaemonService"</span>, <span class="string">"调度job"</span>);</span><br><span class="line">        JobScheduler tm =</span><br><span class="line">                (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);</span><br><span class="line">        tm.schedule(t);</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> JobInfo <span class="title">getJobInfo</span><span class="params">()</span></span>&#123;</span><br><span class="line">        JobInfo.Builder builder = <span class="keyword">new</span> JobInfo.Builder(kJobId++, <span class="keyword">new</span> ComponentName(<span class="keyword">this</span>, MyJobDaemonService<span class="class">.<span class="keyword">class</span>))</span>;</span><br><span class="line">        builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_NONE);</span><br><span class="line">        builder.setPersisted(<span class="keyword">true</span>);</span><br><span class="line">        builder.setRequiresCharging(<span class="keyword">false</span>);</span><br><span class="line">        builder.setRequiresDeviceIdle(<span class="keyword">false</span>);</span><br><span class="line">        <span class="comment">//间隔1000毫秒</span></span><br><span class="line">        builder.setPeriodic(<span class="number">1000</span>);</span><br><span class="line">        <span class="keyword">return</span> builder.build();</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">// 判断服务是否正在运行</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isServiceWork</span><span class="params">(Context mContext, String serviceName)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">boolean</span> isWork = <span class="keyword">false</span>;</span><br><span class="line">        ActivityManager myAM = (ActivityManager) mContext</span><br><span class="line">                .getSystemService(Context.ACTIVITY_SERVICE);</span><br><span class="line">        List&lt;ActivityManager.RunningServiceInfo&gt; myList = myAM.getRunningServices(<span class="number">100</span>);</span><br><span class="line">        <span class="keyword">if</span> (myList.size() &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; myList.size(); i++) &#123;</span><br><span class="line">            String mName = myList.get(i).service.getClassName().toString();</span><br><span class="line">            <span class="keyword">if</span> (mName.equals(serviceName)) &#123;</span><br><span class="line">                isWork = <span class="keyword">true</span>;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> isWork;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h6 id="四、注册特殊广播："><a href="#四、注册特殊广播：" class="headerlink" title="四、注册特殊广播："></a>四、注册特殊广播：</h6><p>1.1、注册开机广播</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;receiver android:name=<span class="string">".modle.mReceiver"</span>&gt;</span><br><span class="line">    &lt;intent-filter&gt;</span><br><span class="line">    &lt;action android:name=<span class="string">"android.intent.action.BOOT_COMPLETED"</span>/&gt;</span><br><span class="line">    &lt;/intent-filter&gt;</span><br><span class="line">&lt;/receiver&gt;</span><br></pre></td></tr></table></figure>
+
+<p>1.2、开机后启动服务</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">mReceiver</span> <span class="keyword">extends</span> <span class="title">BroadcastReceiver</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onReceive</span><span class="params">(Context context, Intent intent)</span></span>&#123;</span><br><span class="line">        Intent mIntent = <span class="keyword">new</span> Intent(context,StepService<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">        context.startService(mIntent);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>2.1 android.intent.action.USER_PRESENT事件</p>
+<blockquote>
+<p>在做解锁监听程序时，一开始采用监听屏幕SCREEN_ON和SCREEN_OFF这两个action。</p>
+<p>但奇怪的是，这两个action只能通过代码动态的形式注册，才能被监听到，使用AndroidManifest.xml 完全监听不到。</p>
+<p>百度后发现这是PowerManager那边在发这个广播的时候做了限制，限制只能有register到代码中的receiver才能接收。</p>
+<p>后来就找各种能静态注册AndroidManifest.xml同时能反映用户解锁行为的广播.于是找到android.intent.action.USER_PRESENT.</p>
+<p>每个用户隔一段时间重新开始使用手机时，首先按电源键点亮屏幕，紧接着解锁。android.intent.action.USER_PRESENT就是解锁时发出的intent.</p>
+</blockquote>
+<h6 id="五、保证息屏后不被释放资源杀死（WakeLock的使用）没理解"><a href="#五、保证息屏后不被释放资源杀死（WakeLock的使用）没理解" class="headerlink" title="五、保证息屏后不被释放资源杀死（WakeLock的使用）没理解"></a>五、保证息屏后不被释放资源杀死（WakeLock的使用）没理解</h6><p>1、添加权限</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;uses-permission android:name=<span class="string">"android.permission.WAKE_LOCK"</span> /&gt;</span><br></pre></td></tr></table></figure>
+
+<p>2、需求：要在后台跑一个Service执行轮询，屏幕熄灭或锁屏后，仍然需要保持Service一直处于轮询状态。<br> 应用程序中如果要在待机前保存数据状态的话，要保证此过程中不会进入待机。可以在 onResume() 或者 onStart() 中申请 wakelock 锁，即调用getLock()方法。在 onPause() 或者 onDistroy() 中处理应用待机后再释放掉 wakelock 锁，此时调用releaseLock()方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">    * 同步方法   得到休眠锁</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@param</span> context</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">   <span class="function"><span class="keyword">synchronized</span> <span class="keyword">private</span> <span class="keyword">void</span> <span class="title">getLock</span><span class="params">(Context context)</span></span>&#123;</span><br><span class="line">       <span class="keyword">if</span>(mWakeLock==<span class="keyword">null</span>)&#123;</span><br><span class="line">           PowerManager mgr=(PowerManager)context.getSystemService(Context.POWER_SERVICE);</span><br><span class="line">           mWakeLock=mgr.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,StepService<span class="class">.<span class="keyword">class</span>.<span class="title">getName</span>())</span>;</span><br><span class="line">           mWakeLock.setReferenceCounted(<span class="keyword">true</span>);</span><br><span class="line">           Calendar c=Calendar.getInstance();</span><br><span class="line">           c.setTimeInMillis((System.currentTimeMillis()));</span><br><span class="line">           <span class="keyword">int</span> hour =c.get(Calendar.HOUR_OF_DAY);</span><br><span class="line">           <span class="keyword">if</span>(hour&gt;=<span class="number">23</span>||hour&lt;=<span class="number">6</span>)&#123;</span><br><span class="line">               mWakeLock.acquire(<span class="number">5000</span>);</span><br><span class="line">           &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">               mWakeLock.acquire(<span class="number">300000</span>);</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       Log.v(TAG,<span class="string">"get lock"</span>);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">synchronized</span> <span class="keyword">private</span> <span class="keyword">void</span> <span class="title">releaseLock</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(mWakeLock != <span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(mWakeLock.isHeld()) &#123;</span><br><span class="line">                mWakeLock.release();</span><br><span class="line">                Log.v(TAG,<span class="string">"release lock"</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            mWakeLock = <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h6 id="六、加入电量白名单，跳过电量优化"><a href="#六、加入电量白名单，跳过电量优化" class="headerlink" title="六、加入电量白名单，跳过电量优化"></a>六、加入电量白名单，跳过电量优化</h6><blockquote>
+<p>在Android6.0之后，开始引入了电池优化机制，监控APP的耗电量，这样长时间后台运行的service会被监测出来，基于电池优化的策略，很可能会被系统自动杀掉。为了跳过这样的限制，Android是提供电池优化白名单的，通过powerManager.isIgnoringBatteryOptimizations(getPackageName())来判断是否已经加入白名单，没有则通过以下代码来弹窗提示用户自主选择</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Intent intent = <span class="keyword">new</span> Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);</span><br><span class="line">intent.setData(Uri.parse(<span class="string">"package:"</span> + getPackageName()));</span><br><span class="line">startActivity(intent);</span><br></pre></td></tr></table></figure>
+
+<h6 id="七、在多任务列表源码里隐藏该app界面或清理时过滤该包名"><a href="#七、在多任务列表源码里隐藏该app界面或清理时过滤该包名" class="headerlink" title="七、在多任务列表源码里隐藏该app界面或清理时过滤该包名"></a>七、在多任务列表源码里隐藏该app界面或清理时过滤该包名</h6><p>等分析过多任务后，再来完善。</p>
+<h6 id="八、一些小操作方法"><a href="#八、一些小操作方法" class="headerlink" title="八、一些小操作方法"></a>八、一些小操作方法</h6><p>1、在service的onStartCommand方法里返回 STATR_STICK，比如上面的双进程守护</p>
+<p>2、覆写Service的onDestroy方法</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/09/08/%E7%94%A8%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8Cshell%E5%91%BD%E4%BB%A4/" rel="prev" title="用代码执行shell命令">
+      <i class="fa fa-chevron-left"></i> 用代码执行shell命令
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#一、保活方案："><span class="nav-number">1.</span> <span class="nav-text">一、保活方案：</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#一、进程提权"><span class="nav-number">1.1.</span> <span class="nav-text">一、进程提权</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#二、双进程守护（先放着-没理解Aidl在此处的作用）"><span class="nav-number">1.2.</span> <span class="nav-text">二、双进程守护（先放着 没理解Aidl在此处的作用）</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#三、使用JobService来实现应用退出后重启Service"><span class="nav-number">1.3.</span> <span class="nav-text">三、使用JobService来实现应用退出后重启Service</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#四、注册特殊广播："><span class="nav-number">1.4.</span> <span class="nav-text">四、注册特殊广播：</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#五、保证息屏后不被释放资源杀死（WakeLock的使用）没理解"><span class="nav-number">1.5.</span> <span class="nav-text">五、保证息屏后不被释放资源杀死（WakeLock的使用）没理解</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#六、加入电量白名单，跳过电量优化"><span class="nav-number">1.6.</span> <span class="nav-text">六、加入电量白名单，跳过电量优化</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#七、在多任务列表源码里隐藏该app界面或清理时过滤该包名"><span class="nav-number">1.7.</span> <span class="nav-text">七、在多任务列表源码里隐藏该app界面或清理时过滤该包名</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#八、一些小操作方法"><span class="nav-number">1.8.</span> <span class="nav-text">八、一些小操作方法</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Rain.G"
+      src="/images/wx.JPG">
+  <p class="site-author-name" itemprop="name">Rain.G</p>
+  <div class="site-description" itemprop="description">愿你一生努力，一生被爱</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">26</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/rain-G-G" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;rain-G-G" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-heartbeat fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://blog.csdn.net/sinat_37781304/article/details/82729029?depth_1-utm_source=distribute.wap_relevant.none-task-blog-BlogCommendFromBaidu-1&utm_source=distribute.wap_relevant.none-task-blog-BlogCommendFromBaidu-1&from=singlemessage&isappinstalled=0" title="https:&#x2F;&#x2F;blog.csdn.net&#x2F;sinat_37781304&#x2F;article&#x2F;details&#x2F;82729029?depth_1-utm_source&#x3D;distribute.wap_relevant.none-task-blog-BlogCommendFromBaidu-1&amp;utm_source&#x3D;distribute.wap_relevant.none-task-blog-BlogCommendFromBaidu-1&amp;from&#x3D;singlemessage&amp;isappinstalled&#x3D;0" rel="noopener" target="_blank">Hexo搭建</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.jianshu.com/p/85ea951ce996?from=singlemessage&isappinstalled=0" title="https:&#x2F;&#x2F;www.jianshu.com&#x2F;p&#x2F;85ea951ce996?from&#x3D;singlemessage&amp;isappinstalled&#x3D;0" rel="noopener" target="_blank">NexT美化</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Rain.G</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

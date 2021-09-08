@@ -28,7 +28,7 @@
 <meta property="og:description" content="内置app">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2021-04-22T14:32:46.000Z">
-<meta property="article:modified_time" content="2021-04-22T15:38:12.621Z">
+<meta property="article:modified_time" content="2021-09-08T13:28:17.287Z">
 <meta property="article:author" content="Rain.G">
 <meta property="article:tag" content="Rain.G">
 <meta name="twitter:card" content="summary">
@@ -204,10 +204,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2021-04-22 22:32:46 / Modified: 23:38:12" itemprop="dateCreated datePublished" datetime="2021-04-22T22:32:46+08:00">2021-04-22</time>
+              <time title="Created: 2021-04-22 22:32:46" itemprop="dateCreated datePublished" datetime="2021-04-22T22:32:46+08:00">2021-04-22</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-09-08 21:28:17" itemprop="dateModified" datetime="2021-09-08T21:28:17+08:00">2021-09-08</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -242,6 +248,9 @@
 
 <p>3、同上</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;vendor&#x2F;cells&#x2F;prebuild&#x2F;bin&#x2F;copy_apps.sh:</span><br><span class="line">#!&#x2F;system&#x2F;bin&#x2F;sh</span><br><span class="line">if [ ! -f &#x2F;data&#x2F;local&#x2F;tmp&#x2F;did ]; then</span><br><span class="line">    pm install &#x2F;system&#x2F;pre-install&#x2F;UCBrowser.apk</span><br><span class="line">    echo 1 &gt; &#x2F;data&#x2F;local&#x2F;tmp&#x2F;did</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
+<p>注意：后来测试发现OTA升级后，内置的app可能会不在，需要模仿上面重新写下，具体原因后面有时间的话再去分析。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">#!&#x2F;system&#x2F;bin&#x2F;sh</span><br><span class="line">if [ ! -f &#x2F;data&#x2F;local&#x2F;tmp&#x2F;did ]; then</span><br><span class="line">    pm install &#x2F;system&#x2F;pre-install&#x2F;Bilibili.apk</span><br><span class="line">    pm install &#x2F;system&#x2F;pre-install&#x2F;kuaishou.apk</span><br><span class="line">    pm install &#x2F;system&#x2F;pre-install&#x2F;UCBrowser.apk</span><br><span class="line">    pm install &#x2F;system&#x2F;pre-install&#x2F;taobao.apk</span><br><span class="line">    pm install &#x2F;system&#x2F;pre-install&#x2F;yingyongbao.apk</span><br><span class="line">    pm install &#x2F;system&#x2F;pre-install&#x2F;TikTok.apk</span><br><span class="line">    pm install &#x2F;system&#x2F;pre-install&#x2F;changba.apk</span><br><span class="line">    pm install &#x2F;system&#x2F;pre-install&#x2F;tengxunhuiyi.apk</span><br><span class="line">    echo 1 &gt; &#x2F;data&#x2F;local&#x2F;tmp&#x2F;did</span><br><span class="line">fi</span><br><span class="line">if [ ! -f &#x2F;data&#x2F;local&#x2F;tmp&#x2F;did_v2 ]; then</span><br><span class="line">    pm install &#x2F;system&#x2F;pre-install&#x2F;Wps.apk</span><br><span class="line">    pm install &#x2F;system&#x2F;pre-install&#x2F;jingdongshipin.apk</span><br><span class="line">    pm install &#x2F;system&#x2F;pre-install&#x2F;lizhiweike.apk</span><br><span class="line">    echo 1 &gt; &#x2F;data&#x2F;local&#x2F;tmp&#x2F;did_v2</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
 
 
     </div>
@@ -338,14 +347,14 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">23</span>
+          <span class="site-state-item-count">26</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">9</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
   </nav>
