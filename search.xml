@@ -4,6 +4,56 @@
   
     
     <entry>
+      <title>Android系统版本号</title>
+      <link href="2021/09/28/Android%E7%B3%BB%E7%BB%9F%E7%89%88%E6%9C%AC%E5%8F%B7/"/>
+      <url>2021/09/28/Android%E7%B3%BB%E7%BB%9F%E7%89%88%E6%9C%AC%E5%8F%B7/</url>
+      
+        <content type="html"><![CDATA[<h6 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h6><p>系统版本号的获取是通过获取”ro.build.display.id”的值，当然也可通过shell命令</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb shell getprop ro.build.display.id</span><br></pre></td></tr></table></figure><h6 id="一、版本号设置不可点击"><a href="#一、版本号设置不可点击" class="headerlink" title="一、版本号设置不可点击"></a>一、版本号设置不可点击</h6><p>1、调用setEnabled()：</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> Preference preference = screen.findPreference(getPreferenceKey());</span><br><span class="line"><span class="keyword">if</span> (preference != <span class="keyword">null</span>) &#123;</span><br><span class="line">preference.setEnabled(<span class="keyword">false</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>2、在相关设置项preference的controller类中实现getAvailabilityStatus()方法，使此方法的返回值为DISABLED_DEPENDENT_SETTING即可。这个在分析”设置主界面加载”的时候提到过。</p><h6 id="二、自定义版本号格式"><a href="#二、自定义版本号格式" class="headerlink" title="二、自定义版本号格式"></a>二、自定义版本号格式</h6><p>最近遇到修改定制 设置-关于-版本号的小需求，在这里记录下</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;build&#x2F;make&#x2F;tools&#x2F;buildinfo.sh</span><br></pre></td></tr></table></figure><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">Displayid="V1.0.6."`date -d today +%Y%m%d%H` //版本号格式 + 时间格式 (%Y%m%d%H%M%S)</span><br><span class="line">echo "ro.build.display.id=$Displayid" //属性值 ro.build.display.id</span><br><span class="line">...</span><br></pre></td></tr></table></figure><p>当时以为这样就ok了，后来发现编译结束时，第一次编译时间会变，后面再编译的时候 时间还是第一次编译的时间，需要更新俩个文件的时间。</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">1、script/build_user.sh </span><br><span class="line">...</span><br><span class="line">lunch rk3399_firefly_sr_c11g_jd4-user</span><br><span class="line">touch build/make/tools/buildinfo.sh //touch更新文件时间</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">-------------------------</span><br><span class="line"></span><br><span class="line">2、script/build_userdebug.sh</span><br><span class="line">...</span><br><span class="line">lunch rk3399_firefly_sr_c11g_jd4-userdebug</span><br><span class="line">touch build/make/tools/buildinfo.sh //一样的操作</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> Android </category>
+          
+          <category> Android 应用层 </category>
+          
+          <category> 设置 </category>
+          
+          <category> 版本号 </category>
+          
+      </categories>
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Android开机默认为自定义输入法</title>
+      <link href="2021/09/28/%C2%96Android%E5%BC%80%E6%9C%BA%E9%BB%98%E8%AE%A4%E4%B8%BA%E8%87%AA%E5%AE%9A%E4%B9%89%E8%BE%93%E5%85%A5%E6%B3%95/"/>
+      <url>2021/09/28/%C2%96Android%E5%BC%80%E6%9C%BA%E9%BB%98%E8%AE%A4%E4%B8%BA%E8%87%AA%E5%AE%9A%E4%B9%89%E8%BE%93%E5%85%A5%E6%B3%95/</url>
+      
+        <content type="html"><![CDATA[<p>将这个分成3步：</p><h6 id="一、设置启用的输入方法列表"><a href="#一、设置启用的输入方法列表" class="headerlink" title="一、设置启用的输入方法列表"></a>一、设置启用的输入方法列表</h6><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">/frameworks/base/packages/SettingsProvider/res/values/defaults.xml</span><br><span class="line"> </span><br><span class="line">&lt;string name="def_enable_input_methods" translatable="false"&gt;com.sohu.inputmethod.sogou/.SogouIME&lt;/string&gt;</span><br><span class="line">&lt;string name="def_input_method" translatable="false"&gt;com.sohu.inputmethod.sogou/.SogouIME&lt;/string&gt;</span><br></pre></td></tr></table></figure><h6 id="二、数据库中加载默认值"><a href="#二、数据库中加载默认值" class="headerlink" title="二、数据库中加载默认值"></a>二、数据库中加载默认值</h6><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">loadStringSetting(stmt, Settings.Secure.ENABLED_INPUT_METHODS, R.string.def_enable_input_methods);<span class="comment">//启用的输入法列表</span></span><br><span class="line">loadStringSetting(stmt, Settings.Secure.DEFAULT_INPUT_METHOD, R.string.def_input_method);<span class="comment">//默认输入法</span></span><br></pre></td></tr></table></figure><h6 id="三、授予默认输入法必要权限"><a href="#三、授予默认输入法必要权限" class="headerlink" title="三、授予默认输入法必要权限"></a>三、授予默认输入法必要权限</h6><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> String sougouInputPackageName = <span class="string">"xxx"</span>;<span class="comment">//记得替换包名</span></span><br><span class="line">PackageInfo sougouInputPackage = getSystemPackageInfo(sougouInputPackageName);</span><br><span class="line"><span class="keyword">if</span> (sougouInputPackage != <span class="keyword">null</span>) &#123;<span class="comment">//权限按需求给</span></span><br><span class="line">    grantRuntimePermissions(sougouInputPackage, ALWAYS_LOCATION_PERMISSIONS, <span class="keyword">true</span>, userId);</span><br><span class="line">    grantRuntimePermissions(sougouInputPackage, STORAGE_PERMISSIONS, <span class="keyword">true</span>, userId);</span><br><span class="line">    grantRuntimePermissions(sougouInputPackage, PHONE_PERMISSIONS, <span class="keyword">true</span>, userId);</span><br><span class="line">    grantRuntimePermissions(sougouInputPackage, CONTACTS_PERMISSIONS, <span class="keyword">true</span>, userId);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> Android </category>
+          
+          <category> Android 应用层 </category>
+          
+          <category> 设置 </category>
+          
+          <category> 输入法 </category>
+          
+      </categories>
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>service保活</title>
       <link href="2021/09/08/service%E4%BF%9D%E6%B4%BB/"/>
       <url>2021/09/08/service%E4%BF%9D%E6%B4%BB/</url>
@@ -120,7 +170,7 @@
           
           <category> Android </category>
           
-          <category> Android 应用层源码 </category>
+          <category> Android 应用层 </category>
           
           <category> 设置 </category>
           
