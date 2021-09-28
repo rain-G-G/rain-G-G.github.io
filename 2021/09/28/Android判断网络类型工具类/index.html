@@ -20,18 +20,20 @@
     var CONFIG = {"hostname":"wxyy97.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="愿你一生努力，一生被爱">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Rain.G">
-<meta property="og:url" content="http://wxyy97.com/categories/Android/index.html">
+  <meta name="description" content="总结下关于网络的那些事，其实我也不知道有多少，慢慢积累吧。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android判断网络类型工具类">
+<meta property="og:url" content="http://wxyy97.com/2021/09/28/Android%E5%88%A4%E6%96%AD%E7%BD%91%E7%BB%9C%E7%B1%BB%E5%9E%8B%E5%B7%A5%E5%85%B7%E7%B1%BB/index.html">
 <meta property="og:site_name" content="Rain.G">
-<meta property="og:description" content="愿你一生努力，一生被爱">
+<meta property="og:description" content="总结下关于网络的那些事，其实我也不知道有多少，慢慢积累吧。">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-09-28T14:29:51.000Z">
+<meta property="article:modified_time" content="2021-09-28T14:59:31.010Z">
 <meta property="article:author" content="Rain.G">
 <meta property="article:tag" content="Rain.G">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://wxyy97.com/categories/Android/">
+<link rel="canonical" href="http://wxyy97.com/2021/09/28/Android%E5%88%A4%E6%96%AD%E7%BD%91%E7%BB%9C%E7%B1%BB%E5%9E%8B%E5%B7%A5%E5%85%B7%E7%B1%BB/">
 
 
 <script id="page-configurations">
@@ -39,12 +41,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'en'
   };
 </script>
 
-  <title>Category: Android | Rain.G</title>
+  <title>Android判断网络类型工具类 | Rain.G</title>
   
 
 
@@ -173,235 +175,110 @@
         <div class="content-wrap">
           
 
-          <div class="content category">
+          <div class="content post posts-expand">
             
 
+    
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h2 class="collection-header">Android
-          <small>Category</small>
-        </h2>
-      </div>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://wxyy97.com/2021/09/28/Android%E5%88%A4%E6%96%AD%E7%BD%91%E7%BB%9C%E7%B1%BB%E5%9E%8B%E5%B7%A5%E5%85%B7%E7%B1%BB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/wx.JPG">
+      <meta itemprop="name" content="Rain.G">
+      <meta itemprop="description" content="愿你一生努力，一生被爱">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Rain.G">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android判断网络类型工具类
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-09-28 22:29:51 / Modified: 22:59:31" itemprop="dateCreated datePublished" datetime="2021-09-28T22:29:51+08:00">2021-09-28</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Android-%E5%BA%94%E7%94%A8%E5%B1%82/" itemprop="url" rel="index"><span itemprop="name">Android 应用层</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Android-%E5%BA%94%E7%94%A8%E5%B1%82/%E8%AE%BE%E7%BD%AE/" itemprop="url" rel="index"><span itemprop="name">设置</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Android-%E5%BA%94%E7%94%A8%E5%B1%82/%E8%AE%BE%E7%BD%AE/%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">网络</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">总结下关于网络的那些事，其实我也不知道有多少，慢慢积累吧。</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2021</span>
-    </div>
+        <h6 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h6><p>Android6.0以后判断网络类型的方式不再使用TelephonyManager.getNetworkType()，看下高版本怎么搞的吧。</p>
+<h6 id="一、判断网络连接类型-俩种方式"><a href="#一、判断网络连接类型-俩种方式" class="headerlink" title="一、判断网络连接类型(俩种方式)"></a>一、判断网络连接类型(俩种方式)</h6><p>1、主动获取</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//获取网络连接管理器对象</span></span><br><span class="line">ConnectivityManager connectManager = (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);</span><br><span class="line"><span class="comment">//获取当前活动的网络对象(Network)信息， 注意这manager还有个可以根据uid直接获取NetWork对象(反射),这就可以获得指定应用的网络对象，但是需要系统签名，有需求的话去看源码，解决VPN的时候亲测可以</span></span><br><span class="line">Network network = connectManager.getActiveNetwork();</span><br><span class="line"><span class="comment">//再获取描述当前网络对象属性(能力)的对象</span></span><br><span class="line">NetworkCapabilities capabilities = connectManager.getNetworkCapabilities(network);</span><br><span class="line"><span class="comment">//通过hasCapability() 中可以获取某个网络属性的状态，下面代码判断网络是否已经连接。需要注意，连接上并不代表能访问网络，比如连接到的无线路由器没有接入互联网</span></span><br><span class="line"><span class="keyword">boolean</span> hasCapability = capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET);</span><br><span class="line"><span class="comment">//当网络已经连接上了，那么我么再通过 hasTransport() 来判断当前连接网络类型</span></span><br><span class="line"><span class="keyword">boolean</span> hasWifiTrans = capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI);</span><br></pre></td></tr></table></figure>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+<p>2、注册监听(缺点就是会回调多次，至于原因还未分析)</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">ConnectivityManager.NetworkCallback callback = <span class="keyword">new</span> ConnectivityManager.NetworkCallback()&#123;</span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCapabilitiesChanged</span><span class="params">(Network network, NetworkCapabilities capabilities)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">super</span>.onCapabilitiesChanged(network, capabilities);</span><br><span class="line">		NetworkCapabilities capabilities = manager.getNetworkCapabilities(network);</span><br><span class="line">		...<span class="comment">//获取到network对象，流程和上面一样</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-09-28T22:29:51+08:00"
-              content="2021-09-28">
-          09-28
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/09/28/Android%E5%88%A4%E6%96%AD%E7%BD%91%E7%BB%9C%E7%B1%BB%E5%9E%8B%E5%B7%A5%E5%85%B7%E7%B1%BB/" itemprop="url">
-            <span itemprop="name">Android判断网络类型工具类</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-09-28T21:18:27+08:00"
-              content="2021-09-28">
-          09-28
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/09/28/Android%E7%B3%BB%E7%BB%9F%E7%89%88%E6%9C%AC%E5%8F%B7/" itemprop="url">
-            <span itemprop="name">Android系统版本号</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-09-28T21:07:49+08:00"
-              content="2021-09-28">
-          09-28
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/09/28/%C2%96Android%E5%BC%80%E6%9C%BA%E9%BB%98%E8%AE%A4%E4%B8%BA%E8%87%AA%E5%AE%9A%E4%B9%89%E8%BE%93%E5%85%A5%E6%B3%95/" itemprop="url">
-            <span itemprop="name">Android开机默认为自定义输入法</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-09-08T21:48:49+08:00"
-              content="2021-09-08">
-          09-08
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/09/08/service%E4%BF%9D%E6%B4%BB/" itemprop="url">
-            <span itemprop="name">service保活</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-09-08T21:36:45+08:00"
-              content="2021-09-08">
-          09-08
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/09/08/%E7%94%A8%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8Cshell%E5%91%BD%E4%BB%A4/" itemprop="url">
-            <span itemprop="name">用代码执行shell命令</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-09-08T21:29:28+08:00"
-              content="2021-09-08">
-          09-08
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/09/08/%E8%A7%86%E9%A2%91%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%82%B9/" itemprop="url">
-            <span itemprop="name">视频基础知识点</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-08-26T22:08:22+08:00"
-              content="2021-08-26">
-          08-26
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/08/26/AIDL%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/" itemprop="url">
-            <span itemprop="name">AIDL基本用法</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-08-25T21:14:57+08:00"
-              content="2021-08-25">
-          08-25
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/08/25/CallBack%E7%94%A8%E6%B3%95/" itemprop="url">
-            <span itemprop="name">CallBack用法</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-08-09T21:31:15+08:00"
-              content="2021-08-09">
-          08-09
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/08/09/Settings10%E4%B8%BB%E7%95%8C%E9%9D%A2%E5%8A%A0%E8%BD%BD(%E4%B8%80)/" itemprop="url">
-            <span itemprop="name">Settings10主界面加载(一)</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-07-21T23:24:16+08:00"
-              content="2021-07-21">
-          07-21
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/07/21/%E5%B1%8F%E8%94%BD%E8%BF%94%E5%9B%9E%E9%94%AE%E5%92%8C%E5%A4%9A%E4%BB%BB%E5%8A%A1%E9%94%AE%E5%8A%9F%E8%83%BD/" itemprop="url">
-            <span itemprop="name">屏蔽返回键和多任务键功能</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
+<blockquote>
+<p>NetworkCapabilities.TRANSPORT_CELLULAR<br>NetworkCapabilities.TRANSPORT_WIFI<br>NetworkCapabilities.TRANSPORT_BLUETOOTH<br>NetworkCapabilities.TRANSPORT_ETHERNET<br>NetworkCapabilities.TRANSPORT_VPN  //之前用来判断过滤包名绕过VPN<br>NetworkCapabilities.TRANSPORT_WIFI_AWARE<br>NetworkCapabilities.TRANSPORT_LOWPAN</p>
+</blockquote>
+<h6 id="二、-Android-N-以上版本判断移动网络类型"><a href="#二、-Android-N-以上版本判断移动网络类型" class="headerlink" title="二、 Android N 以上版本判断移动网络类型"></a>二、 Android N 以上版本判断移动网络类型</h6><p><a href="https://blog.csdn.net/weixin_36378347/article/details/113451321" target="_blank" rel="noopener">移动网络类型借鉴这篇文章</a></p>
 
     </div>
-  </div>
-  
-  
-  
 
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/09/28/Android%E7%B3%BB%E7%BB%9F%E7%89%88%E6%9C%AC%E5%8F%B7/" rel="prev" title="Android系统版本号">
+      <i class="fa fa-chevron-left"></i> Android系统版本号
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
   
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/categories/Android/page/2/">2</a><a class="page-number" href="/categories/Android/page/3/">3</a><a class="extend next" rel="next" href="/categories/Android/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
-  </nav>
+  
+  
 
 
 
@@ -453,6 +330,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-6"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#一、判断网络连接类型-俩种方式"><span class="nav-number">2.</span> <span class="nav-text">一、判断网络连接类型(俩种方式)</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#二、-Android-N-以上版本判断移动网络类型"><span class="nav-number">3.</span> <span class="nav-text">二、 Android N 以上版本判断移动网络类型</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
