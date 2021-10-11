@@ -92,6 +92,10 @@
           
           <category> Android 基础知识 </category>
           
+          <category> 四大组件 </category>
+          
+          <category> service </category>
+          
       </categories>
       
       
@@ -112,6 +116,8 @@
           <category> Android </category>
           
           <category> Android 基础知识 </category>
+          
+          <category> shell 命令 </category>
           
       </categories>
       
@@ -134,6 +140,10 @@
           
           <category> Android 基础知识 </category>
           
+          <category> 音视频图片开发 </category>
+          
+          <category> 视频开发 </category>
+          
       </categories>
       
       
@@ -155,6 +165,10 @@
           
           <category> Android 基础知识 </category>
           
+          <category> Android 通信 </category>
+          
+          <category> 进程通信 </category>
+          
       </categories>
       
       
@@ -175,6 +189,8 @@
           <category> Android </category>
           
           <category> Android 基础知识 </category>
+          
+          <category> 回调 </category>
           
       </categories>
       
@@ -243,6 +259,10 @@
           
           <category> Android 基础知识 </category>
           
+          <category> 音视频图片开发 </category>
+          
+          <category> 音频开发 </category>
+          
       </categories>
       
       
@@ -262,28 +282,7 @@
           
           <category> Android </category>
           
-          <category> Android 基础知识 </category>
-          
-      </categories>
-      
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>Adapter简单使用</title>
-      <link href="2021/07/09/Adapter%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/"/>
-      <url>2021/07/09/Adapter%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/</url>
-      
-        <content type="html"><![CDATA[<p><a href="https://blog.csdn.net/qq_45797116/article/details/117688150" target="_blank" rel="noopener">Adapter简单使用</a></p><p><a href="https://www.jianshu.com/p/24833a2cffd1" target="_blank" rel="noopener">BaseAdapter的基本使用及优化</a></p>]]></content>
-      
-      
-      <categories>
-          
-          <category> Android </category>
-          
-          <category> Android 基础知识 </category>
+          <category> Java基础 </category>
           
       </categories>
       
@@ -369,6 +368,10 @@
           
           <category> Android 基础知识 </category>
           
+          <category> Android 数据持久化 </category>
+          
+          <category> 序列化 </category>
+          
       </categories>
       
       
@@ -388,7 +391,9 @@
           
           <category> Android </category>
           
-          <category> Android bug分析 </category>
+          <category> Android 基础知识 </category>
+          
+          <category> SystemUI </category>
           
       </categories>
       
@@ -432,6 +437,8 @@
           
           <category> Android 基础知识 </category>
           
+          <category> SystemUI </category>
+          
       </categories>
       
       
@@ -452,6 +459,8 @@
           <category> Android </category>
           
           <category> Android 基础知识 </category>
+          
+          <category> SystemUI </category>
           
       </categories>
       
@@ -474,6 +483,10 @@
           
           <category> Android 基础知识 </category>
           
+          <category> 四大组件 </category>
+          
+          <category> Activity </category>
+          
       </categories>
       
       
@@ -494,6 +507,8 @@
           <category> Android </category>
           
           <category> Android 基础知识 </category>
+          
+          <category> Android 通信 </category>
           
       </categories>
       
@@ -516,6 +531,8 @@
           
           <category> Android 基础知识 </category>
           
+          <category> Android 通信 </category>
+          
       </categories>
       
       
@@ -536,6 +553,8 @@
           <category> Android </category>
           
           <category> Android 基础知识 </category>
+          
+          <category> Android UI控件 </category>
           
       </categories>
       
