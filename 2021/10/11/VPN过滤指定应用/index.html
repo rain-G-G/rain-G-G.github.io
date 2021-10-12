@@ -28,7 +28,7 @@
 <meta property="og:description" content="最近遇到云手机连接VPN后，bin服务访问不到消息服务器和图片服务器地址，导致云手机离线。所以借此机会写下如何过滤指定应用，本文最大的遗憾就是拿到uid范围后又做了什么，分析到c++层就看不明白了，有机会会补上来的。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2021-10-11T12:51:05.000Z">
-<meta property="article:modified_time" content="2021-10-11T13:42:12.717Z">
+<meta property="article:modified_time" content="2021-10-12T14:18:27.094Z">
 <meta property="article:author" content="Rain.G">
 <meta property="article:tag" content="Rain.G">
 <meta name="twitter:card" content="summary">
@@ -204,10 +204,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2021-10-11 20:51:05 / Modified: 21:42:12" itemprop="dateCreated datePublished" datetime="2021-10-11T20:51:05+08:00">2021-10-11</time>
+              <time title="Created: 2021-10-11 20:51:05" itemprop="dateCreated datePublished" datetime="2021-10-11T20:51:05+08:00">2021-10-11</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-10-12 22:18:27" itemprop="dateModified" datetime="2021-10-12T22:18:27+08:00">2021-10-12</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -242,15 +248,14 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h6 id="概念-官网对于VPN的介绍"><a href="#概念-官网对于VPN的介绍" class="headerlink" title="概念: 官网对于VPN的介绍"></a>概念: <a href="https://developer.android.google.cn/guide/topics/connectivity/vpn#per-app" target="_blank" rel="noopener">官网对于VPN的介绍</a></h6><h6 id="做法："><a href="#做法：" class="headerlink" title="做法："></a>做法：</h6><blockquote>
+        <h6 id="一、概念-官网对于VPN的介绍"><a href="#一、概念-官网对于VPN的介绍" class="headerlink" title="一、概念: 官网对于VPN的介绍"></a>一、概念: <a href="https://developer.android.google.cn/guide/topics/connectivity/vpn#per-app" target="_blank" rel="noopener">官网对于VPN的介绍</a></h6><h6 id="二、查询指定包名走的是WIFI还是VPN："><a href="#二、查询指定包名走的是WIFI还是VPN：" class="headerlink" title="二、查询指定包名走的是WIFI还是VPN："></a>二、查询指定包名走的是WIFI还是VPN：</h6><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">	connMgr = 			(ConnectivityManager)mContext.getSystemService(Context.CONNECTIVITY_SERVICE);</span><br><span class="line">	PackageManager pm = mContext.getPackageManager();</span><br><span class="line">	ApplicationInfo applicationInfo = pm.getApplicationInfo(<span class="string">"com.ss.android.ugc.aweme"</span>, PackageManager.GET_ACTIVITIES);</span><br><span class="line">    <span class="keyword">if</span> (connMgr == <span class="keyword">null</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">     &#125;</span><br><span class="line">     Method method = connMgr.getClass().getMethod(<span class="string">"getActiveNetworkForUid"</span>, <span class="keyword">int</span><span class="class">.<span class="keyword">class</span>, <span class="title">boolean</span>.<span class="title">class</span>)</span>;</span><br><span class="line">    Network network = (Network) method.invoke(connMgr,applicationInfo.uid, <span class="keyword">false</span>);</span><br><span class="line">     <span class="comment">//NetworkInfo info = connMgr.getNetworkInfo(network);</span></span><br><span class="line">     </span><br><span class="line"> NetworkCapabilities capabilities = connMgr.getNetworkCapabilities(network); </span><br><span class="line"> <span class="keyword">boolean</span> isConnect = capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET);</span><br><span class="line"> Log.v(<span class="string">"wangxin333"</span>, <span class="string">"packageName = com.ss.android.ugc.aweme ,"</span> + <span class="string">" Network = "</span> + network.toString() + <span class="string">" , isConnect = "</span> + isConnect);</span><br><span class="line"> <span class="keyword">if</span>(capabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN))&#123;</span><br><span class="line">                    Log.v(<span class="string">"wangxin333"</span>, <span class="string">"VPN"</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span> (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI))&#123;</span><br><span class="line">                    Log.v(<span class="string">"wangxin333"</span>, <span class="string">"WIFI"</span>);</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"> &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h6 id="三、绕过vpn做法："><a href="#三、绕过vpn做法：" class="headerlink" title="三、绕过vpn做法："></a>三、绕过vpn做法：</h6><blockquote>
 <p>VPN连接时过滤掉bin文件，走系统正常的网络</p>
 </blockquote>
 <p>官方文档里面有对禁止和允许使用VPN的相关介绍：</p>
 <blockquote>
-<p>VPN 应用可以过滤允许哪些已安装的应用通过 VPN 连接发送流量。</p>
-<p>1、您可以创建允许列表，也可以创建禁止列表，但不能同时创建这两者。如果您不创建允许或禁止列表，系统会通过 VPN 发送所有网络流量。</p>
-<p>2、您的 VPN 应用必须先设置列表，然后建立连接。如果您需要更改列表，请建立新的 VPN 连接。</p>
-<p>3、当您将应用添加到列表中时，该应用必须已安装在设备上</p>
+<p>VPN 应用可以过滤允许哪些已安装的应用通过 VPN 连接发送流量。<br>1、您可以创建允许列表，也可以创建禁止列表，但不能同时创建这两者。如果您不创建允许或禁止列表，系统会通过 VPN 发送所有网络流量。<br>2、您的 VPN 应用必须先设置列表，然后建立连接。如果您需要更改列表，请建立新的 VPN 连接。<br>3、当您将应用添加到列表中时，该应用必须已安装在设备上</p>
 </blockquote>
 <p>官方给出的例子：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// The apps that will have access to the VPN.</span></span><br><span class="line">    String[] appPackages = &#123;</span><br><span class="line">        <span class="string">"com.android.chrome"</span>,</span><br><span class="line">        <span class="string">"com.google.android.youtube"</span>,</span><br><span class="line">        <span class="string">"com.example.a.missing.app"</span>&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Loop through the app packages in the array and confirm that the app is</span></span><br><span class="line">    <span class="comment">// installed before adding the app to the allowed list.</span></span><br><span class="line">	<span class="comment">//辅助类来创建VPN接口，里面有一个mConfig（VpnConfig），配置连接时的属性</span></span><br><span class="line">    VpnService.Builder builder = <span class="keyword">new</span> VpnService.Builder();</span><br><span class="line">    PackageManager packageManager = getPackageManager();</span><br><span class="line">    <span class="keyword">for</span> (String appPackage: appPackages) &#123;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        packageManager.getPackageInfo(appPackage, <span class="number">0</span>);</span><br><span class="line">        builder.addAllowedApplication(appPackage);<span class="comment">//这里	</span></span><br><span class="line">      &#125; <span class="keyword">catch</span> (PackageManager.NameNotFoundException e) &#123;</span><br><span class="line">        <span class="comment">// The app isn't installed.</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Complete the VPN interface config.</span></span><br><span class="line">    ParcelFileDescriptor localTunnel = builder</span><br><span class="line">        .addAddress(<span class="string">"2001:db8::1"</span>, <span class="number">64</span>)</span><br><span class="line">        .addRoute(<span class="string">"::"</span>, <span class="number">0</span>)</span><br><span class="line">        .establish();</span><br></pre></td></tr></table></figure>
@@ -305,7 +310,10 @@
     <a href="/2021/09/28/Android%E5%88%A4%E6%96%AD%E7%BD%91%E7%BB%9C%E7%B1%BB%E5%9E%8B%E5%B7%A5%E5%85%B7%E7%B1%BB/" rel="prev" title="Android判断网络类型工具类">
       <i class="fa fa-chevron-left"></i> Android判断网络类型工具类
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2021/10/12/Java%E8%B0%83%E7%94%A8%E5%86%85%E9%83%A8%E7%B1%BB/" rel="next" title="Java调用内部类">
+      Java调用内部类 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -364,7 +372,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-6"><a class="nav-link" href="#概念-官网对于VPN的介绍"><span class="nav-number">1.</span> <span class="nav-text">概念: 官网对于VPN的介绍</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#做法："><span class="nav-number">2.</span> <span class="nav-text">做法：</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-6"><a class="nav-link" href="#一、概念-官网对于VPN的介绍"><span class="nav-number">1.</span> <span class="nav-text">一、概念: 官网对于VPN的介绍</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#二、查询指定包名走的是WIFI还是VPN："><span class="nav-number">2.</span> <span class="nav-text">二、查询指定包名走的是WIFI还是VPN：</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#三、绕过vpn做法："><span class="nav-number">3.</span> <span class="nav-text">三、绕过vpn做法：</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -379,14 +387,14 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-count">31</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">29</span>
+        <span class="site-state-item-count">28</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
   </nav>

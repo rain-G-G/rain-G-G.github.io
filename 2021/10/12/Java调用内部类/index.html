@@ -20,18 +20,20 @@
     var CONFIG = {"hostname":"wxyy97.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="愿你一生努力，一生被爱">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Rain.G">
-<meta property="og:url" content="http://wxyy97.com/categories/Android/index.html">
+  <meta name="description" content="Java调用内部类">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java调用内部类">
+<meta property="og:url" content="http://wxyy97.com/2021/10/12/Java%E8%B0%83%E7%94%A8%E5%86%85%E9%83%A8%E7%B1%BB/index.html">
 <meta property="og:site_name" content="Rain.G">
-<meta property="og:description" content="愿你一生努力，一生被爱">
+<meta property="og:description" content="Java调用内部类">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-10-12T14:20:23.000Z">
+<meta property="article:modified_time" content="2021-10-12T14:23:24.706Z">
 <meta property="article:author" content="Rain.G">
 <meta property="article:tag" content="Rain.G">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://wxyy97.com/categories/Android/">
+<link rel="canonical" href="http://wxyy97.com/2021/10/12/Java%E8%B0%83%E7%94%A8%E5%86%85%E9%83%A8%E7%B1%BB/">
 
 
 <script id="page-configurations">
@@ -39,12 +41,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'en'
   };
 </script>
 
-  <title>Category: Android | Rain.G</title>
+  <title>Java调用内部类 | Rain.G</title>
   
 
 
@@ -173,235 +175,90 @@
         <div class="content-wrap">
           
 
-          <div class="content category">
+          <div class="content post posts-expand">
             
 
+    
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h2 class="collection-header">Android
-          <small>Category</small>
-        </h2>
-      </div>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://wxyy97.com/2021/10/12/Java%E8%B0%83%E7%94%A8%E5%86%85%E9%83%A8%E7%B1%BB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/wx.JPG">
+      <meta itemprop="name" content="Rain.G">
+      <meta itemprop="description" content="愿你一生努力，一生被爱">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Rain.G">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Java调用内部类
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-10-12 22:20:23 / Modified: 22:23:24" itemprop="dateCreated datePublished" datetime="2021-10-12T22:20:23+08:00">2021-10-12</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java%E5%9F%BA%E7%A1%80/" itemprop="url" rel="index"><span itemprop="name">Java基础</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">Java调用内部类</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2021</span>
-    </div>
+        <p>之前一个类中需要调用另一个类当中的内部类(广播接收器)</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">首先，您必须创建X类（外部类）objX.<span class="keyword">new</span> InnerClass()的对象，然后使用语法创建Y类的对象。</span><br><span class="line"></span><br><span class="line">X x=<span class="keyword">new</span> X();</span><br><span class="line">X.Y y=x.<span class="keyword">new</span> Y();</span><br></pre></td></tr></table></figure>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-10-11T20:51:05+08:00"
-              content="2021-10-11">
-          10-11
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/10/11/%C2%96VPN%E8%BF%87%E6%BB%A4%E6%8C%87%E5%AE%9A%E5%BA%94%E7%94%A8/" itemprop="url">
-            <span itemprop="name">VPN过滤指定应用</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-09-28T22:29:51+08:00"
-              content="2021-09-28">
-          09-28
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/09/28/Android%E5%88%A4%E6%96%AD%E7%BD%91%E7%BB%9C%E7%B1%BB%E5%9E%8B%E5%B7%A5%E5%85%B7%E7%B1%BB/" itemprop="url">
-            <span itemprop="name">Android判断网络类型工具类</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-09-28T21:18:27+08:00"
-              content="2021-09-28">
-          09-28
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/09/28/Android%E7%B3%BB%E7%BB%9F%E7%89%88%E6%9C%AC%E5%8F%B7/" itemprop="url">
-            <span itemprop="name">Android系统版本号</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-09-28T21:07:49+08:00"
-              content="2021-09-28">
-          09-28
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/09/28/%C2%96Android%E5%BC%80%E6%9C%BA%E9%BB%98%E8%AE%A4%E4%B8%BA%E8%87%AA%E5%AE%9A%E4%B9%89%E8%BE%93%E5%85%A5%E6%B3%95/" itemprop="url">
-            <span itemprop="name">Android开机默认为自定义输入法</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-09-08T21:48:49+08:00"
-              content="2021-09-08">
-          09-08
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/09/08/service%E4%BF%9D%E6%B4%BB/" itemprop="url">
-            <span itemprop="name">service保活</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-09-08T21:36:45+08:00"
-              content="2021-09-08">
-          09-08
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/09/08/%E7%94%A8%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8Cshell%E5%91%BD%E4%BB%A4/" itemprop="url">
-            <span itemprop="name">用代码执行shell命令</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-09-08T21:29:28+08:00"
-              content="2021-09-08">
-          09-08
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/09/08/%E8%A7%86%E9%A2%91%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%82%B9/" itemprop="url">
-            <span itemprop="name">视频基础知识点</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-08-26T22:08:22+08:00"
-              content="2021-08-26">
-          08-26
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/08/26/AIDL%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/" itemprop="url">
-            <span itemprop="name">AIDL基本用法</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-08-25T21:14:57+08:00"
-              content="2021-08-25">
-          08-25
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/08/25/CallBack%E7%94%A8%E6%B3%95/" itemprop="url">
-            <span itemprop="name">CallBack用法</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-08-09T21:31:15+08:00"
-              content="2021-08-09">
-          08-09
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/08/09/Settings10%E4%B8%BB%E7%95%8C%E9%9D%A2%E5%8A%A0%E8%BD%BD(%E4%B8%80)/" itemprop="url">
-            <span itemprop="name">Settings10主界面加载(一)</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
 
     </div>
-  </div>
-  
-  
-  
 
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/10/11/%C2%96VPN%E8%BF%87%E6%BB%A4%E6%8C%87%E5%AE%9A%E5%BA%94%E7%94%A8/" rel="prev" title="VPN过滤指定应用">
+      <i class="fa fa-chevron-left"></i> VPN过滤指定应用
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
   
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/categories/Android/page/2/">2</a><a class="page-number" href="/categories/Android/page/3/">3</a><a class="extend next" rel="next" href="/categories/Android/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
-  </nav>
+  
+  
 
 
 
