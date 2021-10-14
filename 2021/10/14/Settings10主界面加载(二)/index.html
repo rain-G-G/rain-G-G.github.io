@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"wxyy97.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="上篇《设置主界面加载(一)》主要记录了主界面xml静态加载(调用displayResourceTiles()方法)，本篇主要记录从代码中动态加载设置项(调用refreshDashboardTiles(TAG)方法，其中TAG为 “TopLevelSettings”)。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Settings10主界面加载(二)">
+<meta property="og:url" content="http://wxyy97.com/2021/10/14/Settings10%E4%B8%BB%E7%95%8C%E9%9D%A2%E5%8A%A0%E8%BD%BD(%E4%BA%8C)/index.html">
+<meta property="og:site_name" content="Rain.G">
+<meta property="og:description" content="上篇《设置主界面加载(一)》主要记录了主界面xml静态加载(调用displayResourceTiles()方法)，本篇主要记录从代码中动态加载设置项(调用refreshDashboardTiles(TAG)方法，其中TAG为 “TopLevelSettings”)。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-10-14T13:29:40.000Z">
+<meta property="article:modified_time" content="2021-10-14T13:31:56.793Z">
+<meta property="article:author" content="Rain.G">
+<meta property="article:tag" content="Rain.G">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://wxyy97.com/2021/10/14/Settings10%E4%B8%BB%E7%95%8C%E9%9D%A2%E5%8A%A0%E8%BD%BD(%E4%BA%8C)/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Settings10主界面加载(二) | Rain.G</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Rain.G</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Rain.G</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/rain-G-G" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://wxyy97.com/2021/10/14/Settings10%E4%B8%BB%E7%95%8C%E9%9D%A2%E5%8A%A0%E8%BD%BD(%E4%BA%8C)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/wx.JPG">
+      <meta itemprop="name" content="Rain.G">
+      <meta itemprop="description" content="愿你一生努力，一生被爱">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Rain.G">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Settings10主界面加载(二)
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-10-14 21:29:40 / Modified: 21:31:56" itemprop="dateCreated datePublished" datetime="2021-10-14T21:29:40+08:00">2021-10-14</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Android-%E5%BA%94%E7%94%A8%E5%B1%82/" itemprop="url" rel="index"><span itemprop="name">Android 应用层</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Android-%E5%BA%94%E7%94%A8%E5%B1%82/%E8%AE%BE%E7%BD%AE/" itemprop="url" rel="index"><span itemprop="name">设置</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Android-%E5%BA%94%E7%94%A8%E5%B1%82/%E8%AE%BE%E7%BD%AE/%E8%AE%BE%E7%BD%AE%E4%B8%BB%E7%95%8C%E9%9D%A2%E5%8A%A0%E8%BD%BD-%E4%BA%8C/" itemprop="url" rel="index"><span itemprop="name">设置主界面加载(二)</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">上篇《设置主界面加载(一)》主要记录了主界面xml静态加载(调用displayResourceTiles()方法)，本篇主要记录从代码中动态加载设置项(调用refreshDashboardTiles(TAG)方法，其中TAG为 “TopLevelSettings”)。</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h6 id="DashboardFragmentRegistry-java"><a href="#DashboardFragmentRegistry-java" class="headerlink" title="DashboardFragmentRegistry.java"></a>DashboardFragmentRegistry.java</h6><blockquote>
+<p>说到动态加载，先介绍下这个类DashboardFragmentRegistry.java。这个类主要作用类似于一个注册表的作用，注册记录什么界面(fragment)使用哪一个host去进行相应动态索引加载。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * A registry to keep track of which page hosts which category.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DashboardFragmentRegistry</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Map&lt;String, String&gt; PARENT_TO_CATEGORY_KEY_MAP;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Map&lt;String, String&gt; CATEGORY_KEY_TO_PARENT_MAP;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        PARENT_TO_CATEGORY_KEY_MAP = <span class="keyword">new</span> ArrayMap&lt;&gt;();</span><br><span class="line">        PARENT_TO_CATEGORY_KEY_MAP.put(TopLevelSettings<span class="class">.<span class="keyword">class</span>.<span class="title">getName</span>(),</span></span><br><span class="line"><span class="class">                <span class="title">CategoryKey</span>.<span class="title">CATEGORY_HOMEPAGE</span>)</span>;</span><br><span class="line"> 		...</span><br><span class="line">        PARENT_TO_CATEGORY_KEY_MAP.put(LanguageAndInputSettings<span class="class">.<span class="keyword">class</span>.<span class="title">getName</span>(),</span></span><br><span class="line"><span class="class">                <span class="title">CategoryKey</span>.<span class="title">CATEGORY_SYSTEM_LANGUAGE</span>)</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        CATEGORY_KEY_TO_PARENT_MAP = <span class="keyword">new</span> ArrayMap&lt;&gt;(PARENT_TO_CATEGORY_KEY_MAP.size());</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (Map.Entry&lt;String, String&gt; parentToKey : PARENT_TO_CATEGORY_KEY_MAP.entrySet()) &#123;</span><br><span class="line">            CATEGORY_KEY_TO_PARENT_MAP.put(parentToKey.getValue(), parentToKey.getKey());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>由于目前主要记录主界面加载，而上篇分析道主界面fragment为TopLevelSettings.java，相应的CategoryKey为：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String CATEGORY_HOMEPAGE = <span class="string">"com.android.settings.category.ia.homepage"</span>;</span><br><span class="line"></span><br><span class="line">PARENT_TO_CATEGORY_KEY_MAP.put(TopLevelSettings<span class="class">.<span class="keyword">class</span>.<span class="title">getName</span>(),</span></span><br><span class="line"><span class="class">                <span class="title">CategoryKey</span>.<span class="title">CATEGORY_HOMEPAGE</span>)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到主界面动态加载关键字应是”com.android.settings.category.ia.homepage”。</p>
+<h6 id="refreshDashboardTiles"><a href="#refreshDashboardTiles" class="headerlink" title="refreshDashboardTiles()"></a>refreshDashboardTiles()</h6><p>上篇 <a href="http://wxyy97.com/categories/Android/Android-%E5%BA%94%E7%94%A8%E5%B1%82/%E8%AE%BE%E7%BD%AE/%E8%AE%BE%E7%BD%AE%E4%B8%BB%E7%95%8C%E9%9D%A2%E5%8A%A0%E8%BD%BD-%E4%B8%80/">设置主界面加载(一)</a> 记录到DashboardFragment.java的refreshDashboardTiles()方法主要是用DashboardCategory动态加载设置项的。</p>
+<p>先来整体看看此方法相关逻辑：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Refresh preference items backed by DashboardCategory.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@VisibleForTesting</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">refreshDashboardTiles</span><span class="params">(<span class="keyword">final</span> String TAG)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> PreferenceScreen screen = getPreferenceScreen();</span><br><span class="line">    <span class="keyword">final</span> DashboardCategory category =</span><br><span class="line">            mDashboardFeatureProvider.getTilesForCategory(getCategoryKey());</span><br><span class="line">    <span class="keyword">if</span> (category == <span class="keyword">null</span>) &#123;</span><br><span class="line">        Log.d(TAG, <span class="string">"NO dashboard tiles for "</span> + TAG);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">final</span> List&lt;Tile&gt; tiles = category.getTiles();</span><br><span class="line">    <span class="keyword">if</span> (tiles == <span class="keyword">null</span>) &#123;</span><br><span class="line">        Log.d(TAG, <span class="string">"tile list is empty, skipping category "</span> + category.key);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// Create a list to track which tiles are to be removed.</span></span><br><span class="line">    <span class="keyword">final</span> List&lt;String&gt; remove = <span class="keyword">new</span> ArrayList&lt;&gt;(mDashboardTilePrefKeys);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// There are dashboard tiles, so we need to install SummaryLoader.</span></span><br><span class="line">    <span class="keyword">if</span> (mSummaryLoader != <span class="keyword">null</span>) &#123;</span><br><span class="line">        mSummaryLoader.release();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">final</span> Context context = getContext();</span><br><span class="line">    mSummaryLoader = <span class="keyword">new</span> SummaryLoader(getActivity(), getCategoryKey());</span><br><span class="line">    mSummaryLoader.setSummaryConsumer(<span class="keyword">this</span>);</span><br><span class="line">    <span class="comment">// Install dashboard tiles.</span></span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">boolean</span> forceRoundedIcons = shouldForceRoundedIcon();</span><br><span class="line">    <span class="keyword">for</span> (Tile tile : tiles) &#123;</span><br><span class="line">        <span class="keyword">final</span> String key = mDashboardFeatureProvider.getDashboardKeyForTile(tile);</span><br><span class="line">        <span class="keyword">if</span> (TextUtils.isEmpty(key)) &#123;</span><br><span class="line">            Log.d(TAG, <span class="string">"tile does not contain a key, skipping "</span> + tile);</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (!displayTile(tile)) &#123;</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (mDashboardTilePrefKeys.contains(key)) &#123;</span><br><span class="line">            <span class="comment">// Have the key already, will rebind.</span></span><br><span class="line">            <span class="keyword">final</span> Preference preference = screen.findPreference(key);</span><br><span class="line">            mDashboardFeatureProvider.bindPreferenceToTile(getActivity(), forceRoundedIcons,</span><br><span class="line">                    getMetricsCategory(), preference, tile, key,</span><br><span class="line">                    mPlaceholderPreferenceController.getOrder());</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// Don't have this key, add it.</span></span><br><span class="line">            <span class="keyword">final</span> Preference pref = <span class="keyword">new</span> Preference(getPrefContext());</span><br><span class="line">            mDashboardFeatureProvider.bindPreferenceToTile(getActivity(), forceRoundedIcons,</span><br><span class="line">                    getMetricsCategory(), pref, tile, key,</span><br><span class="line">                    mPlaceholderPreferenceController.getOrder());</span><br><span class="line">            screen.addPreference(pref);</span><br><span class="line">            mDashboardTilePrefKeys.add(key);</span><br><span class="line">        &#125;</span><br><span class="line">        remove.remove(key);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// Finally remove tiles that are gone.</span></span><br><span class="line">    <span class="keyword">for</span> (String key : remove) &#123;</span><br><span class="line">        mDashboardTilePrefKeys.remove(key);</span><br><span class="line">        <span class="keyword">final</span> Preference preference = screen.findPreference(key);</span><br><span class="line">        <span class="keyword">if</span> (preference != <span class="keyword">null</span>) &#123;</span><br><span class="line">            screen.removePreference(preference);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    mSummaryLoader.setListening(<span class="keyword">true</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中TAG为”TopLevelSettings”。</p>
+<h6 id="getTilesForCategory"><a href="#getTilesForCategory" class="headerlink" title="getTilesForCategory()"></a>getTilesForCategory()</h6><blockquote>
+<p>packages/apps/Settings/src/com/android/settings/dashboard/DashboardFeatureProviderImpl.java</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> DashboardCategory category =</span><br><span class="line">                mDashboardFeatureProvider.getTilesForCategory(getCategoryKey());</span><br></pre></td></tr></table></figure>
+
+<p>1、先来看 getCategoryKey()方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* Returns the CategoryKey for loading &#123;<span class="doctag">@link</span> DashboardCategory&#125; for this fragment.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">@VisibleForTesting</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">getCategoryKey</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> DashboardFragmentRegistry.PARENT_TO_CATEGORY_KEY_MAP.get(getClass().getName());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>此方法是获取相关fragment的CategoryKey用于动态加载，根据上面分析主界面是TopLevelSettings.java，故而key为”com.android.settings.category.ia.homepage”。</p>
+<p>2、继续看 getTilesForCategory方法()，具体实现是在 DashboardFeatureProviderImpl.java 中：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> DashboardCategory <span class="title">getTilesForCategory</span><span class="params">(String key)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> mCategoryManager.getTilesByCategory(mContext, key);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>CategoryManager.java的 getTilesByCategory() 方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> DashboardCategory <span class="title">getTilesByCategory</span><span class="params">(Context context, String categoryKey)</span> </span>&#123;</span><br><span class="line">    tryInitCategories(context);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> mCategoryByKeyMap.get(categoryKey);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到方法返回值是通过关键字key（“com.android.settings.category.ia.homepage”）去map集合中索引返回DashboardCategory的对象，故tryInitCategories()方法肯定是存在加载然后对map赋值的操作。直接看 tryInitCategories() 方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">tryInitCategories</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Keep cached tiles by default. The cache is only invalidated when InterestingConfigChange</span></span><br><span class="line">    <span class="comment">// happens.</span></span><br><span class="line">    tryInitCategories(context, <span class="keyword">false</span> <span class="comment">/* forceClearCache */</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">tryInitCategories</span><span class="params">(Context context, <span class="keyword">boolean</span> forceClearCache)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (mCategories == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (forceClearCache) &#123;</span><br><span class="line">            mTileByComponentCache.clear();</span><br><span class="line">        &#125;</span><br><span class="line">    	mCategoryByKeyMap.clear();</span><br><span class="line">    	mCategories = TileUtils.getCategories(context, mTileByComponentCache);</span><br><span class="line">        <span class="keyword">for</span> (DashboardCategory category : mCategories) &#123;</span><br><span class="line">        	mCategoryByKeyMap.put(category.key, category);</span><br><span class="line">        &#125;</span><br><span class="line">        backwardCompatCleanupForCategory(mTileByComponentCache, mCategoryByKeyMap);</span><br><span class="line">        sortCategories(context, mCategoryByKeyMap);</span><br><span class="line">        filterDuplicateTiles(mCategoryByKeyMap);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>首先清空mCategoryByKeyMap集合；</li>
+<li>调用getCategories()方法，去查询构建DashboardCategory的list列表；</li>
+<li>遍历list填充mCategoryByKeyMap集合；</li>
+<li>检查是否使用旧的category keys，如果是，使用最新的category keys去替换；</li>
+<li>排序；</li>
+<li>去掉category中重复的tiles。</li>
+</ol>
+<p>可以看到主要还是getCategories()方法去获取相关数据：</p>
+<blockquote>
+<p> frameworks/base/packages/SettingsLib/Tile/src/com/android/settingslib/drawer/TileUtils.java</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Build a list of DashboardCategory.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> List&lt;DashboardCategory&gt; <span class="title">getCategories</span><span class="params">(Context context,</span></span></span><br><span class="line"><span class="function"><span class="params">        Map&lt;Pair&lt;String, String&gt;, Tile&gt; cache)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">long</span> startTime = System.currentTimeMillis();</span><br><span class="line">    <span class="keyword">boolean</span> setup = Global.getInt(context.getContentResolver(), Global.DEVICE_PROVISIONED, <span class="number">0</span>)</span><br><span class="line">            != <span class="number">0</span>;</span><br><span class="line">    ArrayList&lt;Tile&gt; tiles = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    UserManager userManager = (UserManager) context.getSystemService(Context.USER_SERVICE);</span><br><span class="line">    <span class="keyword">for</span> (UserHandle user : userManager.getUserProfiles()) &#123;</span><br><span class="line">        <span class="comment">// <span class="doctag">TODO:</span> Needs much optimization, too many PM queries going on here.</span></span><br><span class="line">        <span class="keyword">if</span> (user.getIdentifier() == ActivityManager.getCurrentUser()) &#123;</span><br><span class="line">            <span class="comment">// Only add Settings for this user.</span></span><br><span class="line">            getTilesForAction(context, user, SETTINGS_ACTION, cache, <span class="keyword">null</span>, tiles, <span class="keyword">true</span>);</span><br><span class="line">            getTilesForAction(context, user, OPERATOR_SETTINGS, cache,</span><br><span class="line">                    OPERATOR_DEFAULT_CATEGORY, tiles, <span class="keyword">false</span>);</span><br><span class="line">            getTilesForAction(context, user, MANUFACTURER_SETTINGS, cache,</span><br><span class="line">                    MANUFACTURER_DEFAULT_CATEGORY, tiles, <span class="keyword">false</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (setup) &#123;</span><br><span class="line">            getTilesForAction(context, user, EXTRA_SETTINGS_ACTION, cache, <span class="keyword">null</span>, tiles, <span class="keyword">false</span>);</span><br><span class="line">            getTilesForAction(context, user, IA_SETTINGS_ACTION, cache, <span class="keyword">null</span>, tiles, <span class="keyword">false</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    HashMap&lt;String, DashboardCategory&gt; categoryMap = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">    <span class="keyword">for</span> (Tile tile : tiles) &#123;</span><br><span class="line">        <span class="keyword">final</span> String categoryKey = tile.getCategory();</span><br><span class="line">        DashboardCategory category = categoryMap.get(categoryKey);</span><br><span class="line">        <span class="keyword">if</span> (category == <span class="keyword">null</span>) &#123;</span><br><span class="line">            category = <span class="keyword">new</span> DashboardCategory(categoryKey);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (category == <span class="keyword">null</span>) &#123;</span><br><span class="line">                Log.w(LOG_TAG, <span class="string">"Couldn't find category "</span> + categoryKey);</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            categoryMap.put(categoryKey, category);</span><br><span class="line">        &#125;</span><br><span class="line">        category.addTile(tile);</span><br><span class="line">    &#125;</span><br><span class="line">    ArrayList&lt;DashboardCategory&gt; categories = <span class="keyword">new</span> ArrayList&lt;&gt;(categoryMap.values());</span><br><span class="line">    <span class="keyword">for</span> (DashboardCategory category : categories) &#123;</span><br><span class="line">        category.sortTiles();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (DEBUG_TIMING) &#123;</span><br><span class="line">        Log.d(LOG_TAG, <span class="string">"getCategories took "</span></span><br><span class="line">                + (System.currentTimeMillis() - startTime) + <span class="string">" ms"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> categories;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>判断是否完成开机向导设置，setup 为true时表明已完成；</li>
+<li>新建tiles 集合</li>
+<li>遍历设备中所有用户，调用getTilesForAction()方法根据相关action获取相关tiles，填充tiles集合；设置中主要通过此action去搜索系统中符合的活动去作为主界面TopLevelSettings的tile，相关action定义如下：</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String EXTRA_SETTINGS_ACTION = <span class="string">"com.android.settings.action.EXTRA_SETTINGS"</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* <span class="doctag">@See</span> &#123;<span class="doctag">@link</span> #EXTRA_SETTINGS_ACTION&#125;.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String IA_SETTINGS_ACTION = <span class="string">"com.android.settings.action.IA_SETTINGS"</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* Same as #EXTRA_SETTINGS_ACTION but used for the platform Settings activities.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String SETTINGS_ACTION = <span class="string">"com.android.settings.action.SETTINGS"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String OPERATOR_SETTINGS =</span><br><span class="line"><span class="string">"com.android.settings.OPERATOR_APPLICATION_SETTING"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String OPERATOR_DEFAULT_CATEGORY =</span><br><span class="line"><span class="string">"com.android.settings.category.wireless"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String MANUFACTURER_SETTINGS =</span><br><span class="line"><span class="string">"com.android.settings.MANUFACTURER_APPLICATION_SETTING"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String MANUFACTURER_DEFAULT_CATEGORY =</span><br><span class="line"><span class="string">"com.android.settings.category.device"</span>;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li><p>新建categoryMap集合， HashMap&lt;String, DashboardCategory&gt; categoryMap，其中map的key为categoryKey；</p>
+</li>
+<li><p>遍历tiles集合，以每个tile的tile.getCategory()的值为构造参数，创建DashboardCategory对象，并将tile添加到此对象中，将此填充到map集合中；</p>
+</li>
+<li><p>将categoryMap的值赋值给ArrayList cagtories以便执行排序算法，遍历新集合利用Collections函数和比较器TILE_COMPARATOR将category.tiles按照priority从大到小排序。</p>
+</li>
+</ol>
+<p>可以看到主要调用getTilesForAction()方法获取数据源：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@VisibleForTesting</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">getTilesForAction</span><span class="params">(Context context,</span></span></span><br><span class="line"><span class="function"><span class="params">        UserHandle user, String action, Map&lt;Pair&lt;String, String&gt;, Tile&gt; addedCache,</span></span></span><br><span class="line"><span class="function"><span class="params">        String defaultCategory, List&lt;Tile&gt; outTiles, <span class="keyword">boolean</span> requireSettings)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> Intent intent = <span class="keyword">new</span> Intent(action);</span><br><span class="line">    <span class="keyword">if</span> (requireSettings) &#123;</span><br><span class="line">        intent.setPackage(SETTING_PKG);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">final</span> PackageManager pm = context.getPackageManager();</span><br><span class="line">    List&lt;ResolveInfo&gt; results = pm.queryIntentActivitiesAsUser(intent,</span><br><span class="line">            PackageManager.GET_META_DATA, user.getIdentifier());</span><br><span class="line">    <span class="keyword">for</span> (ResolveInfo resolved : results) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!resolved.system) &#123;</span><br><span class="line">            <span class="comment">// Do not allow any app to add to settings, only system ones.</span></span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ActivityInfo activityInfo = resolved.activityInfo;</span><br><span class="line">        Bundle metaData = activityInfo.metaData;</span><br><span class="line">        String categoryKey = defaultCategory;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Load category</span></span><br><span class="line">        <span class="keyword">if</span> ((metaData == <span class="keyword">null</span> || !metaData.containsKey(EXTRA_CATEGORY_KEY))</span><br><span class="line">                &amp;&amp; categoryKey == <span class="keyword">null</span>) &#123;</span><br><span class="line">            Log.w(LOG_TAG, <span class="string">"Found "</span> + resolved.activityInfo.name + <span class="string">" for intent "</span></span><br><span class="line">                    + intent + <span class="string">" missing metadata "</span></span><br><span class="line">                    + (metaData == <span class="keyword">null</span> ? <span class="string">""</span> : EXTRA_CATEGORY_KEY));</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            categoryKey = metaData.getString(EXTRA_CATEGORY_KEY);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Pair&lt;String, String&gt; key = <span class="keyword">new</span> Pair&lt;&gt;(activityInfo.packageName, activityInfo.name);</span><br><span class="line">        Tile tile = addedCache.get(key);</span><br><span class="line">        <span class="keyword">if</span> (tile == <span class="keyword">null</span>) &#123;</span><br><span class="line">            tile = <span class="keyword">new</span> Tile(activityInfo, categoryKey);</span><br><span class="line">            addedCache.put(key, tile);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            tile.setMetaData(metaData);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (!tile.userHandle.contains(user)) &#123;</span><br><span class="line">            tile.userHandle.add(user);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (!outTiles.contains(tile)) &#123;</span><br><span class="line">            outTiles.add(tile);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><p>通过action构建intent，根据requireSettings来决定是否指定Settings进程包名：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> Intent intent = <span class="keyword">new</span> Intent(action);</span><br><span class="line"><span class="keyword">if</span> (requireSettings) &#123;</span><br><span class="line">	intent.setPackage(SETTING_PKG);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用PM查询符合相关intent action支持的ResolveInfo集合，每个ResolveInfo对象主要是从AndroidManifest.xml中解析出的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> PackageManager pm = context.getPackageManager();</span><br><span class="line">List&lt;ResolveInfo&gt; results = pm.queryIntentActivitiesAsUser(intent,</span><br><span class="line">	PackageManager.GET_META_DATA, user.getIdentifier());</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>遍历ResolveInfo集合，获取集合中每一个ResolveInfo对象，判断是否是系统进程，是否AndroidManifest.xml配置的meta标签name包含com.android.settings.category并解析其value值，构建tile对象，并将此添加到tiles集合内输出。</p>
+</li>
+</ol>
+<p><strong>可以看到每个Tile对象，都是包含有从AndroidManifest.xml解析出的Resolveinfo对象和解析meta标签name包含com.android.settings.category value的值。</strong></p>
+<h6 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h6><ol>
+<li>遍历设备所有用户，调getTilesForAction()方法利用PM去检索设备中所有符合传入action的activity ResolveInfo；</li>
+<li>判断每一个ResolveInfo是否是系统进程，是否AndroidManifest.xml中配置的meta标签name包含”com.android.settings.category”的 value，将符合条件的以此value的值和ResolveInfo对象构建tile对象；并以此构建填充tiles集合</li>
+<li>构建HashMap&lt;String, DashboardCategory&gt; categoryMap集合，以AndroidManifest.xml中配置的meta标签name包含”com.android.settings.category”的 value值为参数来构建DashboardCategory对象，遍历tiles集合将符合条件的tile填充DashboardCategory对象（DashboardCategory对象即包含可以显示在界面上的设置项），并以value为key，DashboardCategory对象为value填充categoryMap集合；</li>
+<li>将categoryMap的值赋值给ArrayList cagtories以便执行排序算法，遍历新集合利用Collections函数和比较器TILE_COMPARATOR将category.tiles按照priority从大到小排序。</li>
+<li>经过对Categories集合的更新、排序、去重等操作，得到最终所需的mCategoryByKeyMap集合；</li>
+<li>再根据所传入的TAG(TopLevelSettings)，去mCategoryByKeyMap集合检索，最终得出适合在Settings主界面TopLevelSettings中可以显示的DashboardCategory对象。</li>
+</ol>
+<p>继续回到refreshDashboardTiles()方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> DashboardCategory category =</span><br><span class="line">	mDashboardFeatureProvider.getTilesForCategory(getCategoryKey());</span><br><span class="line"><span class="keyword">if</span> (category == <span class="keyword">null</span>) &#123;</span><br><span class="line">    Log.d(TAG, <span class="string">"NO dashboard tiles for "</span> + TAG);</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">final</span> List&lt;Tile&gt; tiles = category.getTiles();</span><br><span class="line"><span class="keyword">if</span> (tiles == <span class="keyword">null</span>) &#123;</span><br><span class="line">	Log.d(TAG, <span class="string">"tile list is empty, skipping category "</span> + category.key);</span><br><span class="line">	<span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过getTilesForCategory()方法得到适合在Settings主界面TopLevelSettings中可以显示的DashboardCategory对象。判断对象是否为空，对象内是否包含tiles集合；</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Create a list to track which tiles are to be removed.</span></span><br><span class="line"><span class="keyword">final</span> List&lt;String&gt; remove = <span class="keyword">new</span> ArrayList&lt;&gt;(mDashboardTilePrefKeys);</span><br><span class="line"></span><br><span class="line"><span class="comment">// There are dashboard tiles, so we need to install SummaryLoader.</span></span><br><span class="line"><span class="keyword">if</span> (mSummaryLoader != <span class="keyword">null</span>) &#123;</span><br><span class="line">	mSummaryLoader.release();</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">final</span> Context context = getContext();</span><br><span class="line">mSummaryLoader = <span class="keyword">new</span> SummaryLoader(getActivity(), getCategoryKey());</span><br><span class="line">mSummaryLoader.setSummaryConsumer(<span class="keyword">this</span>);</span><br><span class="line"><span class="comment">// Install dashboard tiles.</span></span><br><span class="line"><span class="keyword">final</span> <span class="keyword">boolean</span> forceRoundedIcons = shouldForceRoundedIcon();</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>新建remove集合，跟踪哪些tile需要被移除的；</li>
+<li>初始化SummaryLoader，顾名思义，主要用来加载更新tile的summary；即对于界面显示来说即preference的summary的更新；</li>
+</ol>
+<p>开始遍历适合在Settings主界面TopLevelSettings中可以显示的DashboardCategory对象内的tile集合，每个tile包含从AndroidManifest.xml解析出的resolveinfo对象，此即为初步符合条件可以显示在主界面的动态设置项：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (Tile tile : tiles) &#123;</span><br><span class="line">    <span class="keyword">final</span> String key = mDashboardFeatureProvider.getDashboardKeyForTile(tile);</span><br><span class="line">    <span class="keyword">if</span> (TextUtils.isEmpty(key)) &#123;</span><br><span class="line">        Log.d(TAG, <span class="string">"tile does not contain a key, skipping "</span> + tile);</span><br><span class="line">        <span class="keyword">continue</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (!displayTile(tile)) &#123;</span><br><span class="line">        <span class="keyword">continue</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (mDashboardTilePrefKeys.contains(key)) &#123;</span><br><span class="line">        <span class="comment">// Have the key already, will rebind.</span></span><br><span class="line">        <span class="keyword">final</span> Preference preference = screen.findPreference(key);</span><br><span class="line">        mDashboardFeatureProvider.bindPreferenceToTile(getActivity(), forceRoundedIcons,</span><br><span class="line">                getMetricsCategory(), preference, tile, key,</span><br><span class="line">                mPlaceholderPreferenceController.getOrder());</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// Don't have this key, add it.</span></span><br><span class="line">        <span class="keyword">final</span> Preference pref = <span class="keyword">new</span> Preference(getPrefContext());</span><br><span class="line">        mDashboardFeatureProvider.bindPreferenceToTile(getActivity(), forceRoundedIcons,</span><br><span class="line">                getMetricsCategory(), pref, tile, key,</span><br><span class="line">                mPlaceholderPreferenceController.getOrder());</span><br><span class="line">        screen.addPreference(pref);</span><br><span class="line">        mDashboardTilePrefKeys.add(key);</span><br><span class="line">    &#125;</span><br><span class="line">    remove.remove(key);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><p>getDashboardKeyForTile()；DashboardFeatureProviderImpl.java的getDashboardKeyForTile()方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">getDashboardKeyForTile</span><span class="params">(Tile tile)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (tile == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (tile.hasKey()) &#123;</span><br><span class="line">        <span class="keyword">return</span> tile.getKey(mContext);<span class="comment">//是否包含 com.android.settings.keyhint</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">final</span> StringBuilder sb = <span class="keyword">new</span> StringBuilder(DASHBOARD_TILE_PREF_KEY_PREFIX);</span><br><span class="line">    <span class="keyword">final</span> ComponentName component = tile.getIntent().getComponent();</span><br><span class="line">    sb.append(component.getClassName());</span><br><span class="line">    <span class="keyword">return</span> sb.toString();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>判断AndroidManifest.xml中是否配置了meta标签name为”com.android.settings.keyhint”的属性；</p>
+<p> 如果配置，则获取其value值作为后续显示在界面的preference的key值：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Optional key to use for this tile.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">getKey</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!hasKey()) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    ensureMetadataNotStale(context);</span><br><span class="line">    <span class="keyword">if</span> (mMetaData.get(META_DATA_PREFERENCE_KEYHINT) <span class="keyword">instanceof</span> Integer) &#123;</span><br><span class="line">        <span class="keyword">return</span> context.getResources().getString(mMetaData.getInt(META_DATA_PREFERENCE_KEYHINT));</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> mMetaData.getString(META_DATA_PREFERENCE_KEYHINT);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中ensureMetadataNotStale()方法主要是确保能获取最新的mMetaData：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Ensures metadata is not stale for this tile.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">ensureMetadataNotStale</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> PackageManager pm = context.getApplicationContext().getPackageManager();</span><br><span class="line">   </span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">long</span> lastUpdateTime = pm.getPackageInfo(mActivityPackage,</span><br><span class="line">                PackageManager.GET_META_DATA).lastUpdateTime;</span><br><span class="line">        <span class="keyword">if</span> (lastUpdateTime == mLastUpdateTime) &#123;</span><br><span class="line">            <span class="comment">// All good. Do nothing</span></span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// App has been updated since we load metadata last time. Reload metadata.</span></span><br><span class="line">        mActivityInfo = <span class="keyword">null</span>;</span><br><span class="line">        getActivityInfo(context);</span><br><span class="line">        mLastUpdateTime = lastUpdateTime;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (PackageManager.NameNotFoundException e) &#123;</span><br><span class="line">        Log.d(TAG, <span class="string">"Can't find package, probably uninstalled."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">   </span><br><span class="line"><span class="function"><span class="keyword">private</span> ActivityInfo <span class="title">getActivityInfo</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (mActivityInfo == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">final</span> PackageManager pm = context.getApplicationContext().getPackageManager();</span><br><span class="line">        <span class="keyword">final</span> Intent intent = <span class="keyword">new</span> Intent().setClassName(mActivityPackage, mActivityName);</span><br><span class="line">        <span class="keyword">final</span> List&lt;ResolveInfo&gt; infoList =</span><br><span class="line">                pm.queryIntentActivities(intent, PackageManager.GET_META_DATA);</span><br><span class="line">        <span class="keyword">if</span> (infoList != <span class="keyword">null</span> &amp;&amp; !infoList.isEmpty()) &#123;</span><br><span class="line">            mActivityInfo = infoList.get(<span class="number">0</span>).activityInfo;</span><br><span class="line">            mMetaData = mActivityInfo.metaData;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            Log.e(TAG, <span class="string">"Cannot find package info for "</span></span><br><span class="line">                    + intent.getComponent().flattenToString());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> mActivityInfo;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>查询此App最后一次修改的时间与上一次修改时间是否一致，如果不是则重新通过PM查询更新mMetaData属性，确保mMetaData属性是从App内获取到的最新的。</p>
+<p>如果未配置meta标签name为”com.android.settings.keyhint”的属性，则通过将activity name拼接处理：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> StringBuilder sb = <span class="keyword">new</span> StringBuilder(DASHBOARD_TILE_PREF_KEY_PREFIX);</span><br><span class="line"><span class="keyword">final</span> ComponentName component = tile.getIntent().getComponent();</span><br><span class="line">sb.append(component.getClassName());</span><br><span class="line"><span class="keyword">return</span> sb.toString();</span><br></pre></td></tr></table></figure>
+
+<p>以语言和输入法设置项为例：</p>
+<p>其拼接处理后即为：”dashboard_tile_pref_com.android.settings.Settings$LanguageAndInputSettingsActivity”</p>
+</li>
+<li><p>判断获取到的key是否为空，判断此设置项是否需要被显示；</p>
+</li>
+<li><p>调用bindPreferenceToTile()方法，对preference进行数据绑定；</p>
+</li>
+<li><p>调用setListening()方法，设置监听，以便于后续各个preference后续可以自行根据需要更新summary。</p>
+</li>
+</ol>
+<h6 id="bindPreferenceToTile"><a href="#bindPreferenceToTile" class="headerlink" title="bindPreferenceToTile()"></a>bindPreferenceToTile()</h6><blockquote>
+<p>packages/apps/Settings/src/com/android/settings/dashboard/DashboardFeatureProviderImpl.java</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">bindPreferenceToTile</span><span class="params">(FragmentActivity activity, <span class="keyword">boolean</span> forceRoundedIcon,</span></span></span><br><span class="line"><span class="function"><span class="params">        <span class="keyword">int</span> sourceMetricsCategory, Preference pref, Tile tile, String key, <span class="keyword">int</span> baseOrder)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (pref == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    pref.setTitle(tile.getTitle(activity.getApplicationContext()));</span><br><span class="line">    <span class="keyword">if</span> (!TextUtils.isEmpty(key)) &#123;</span><br><span class="line">        pref.setKey(key);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        pref.setKey(getDashboardKeyForTile(tile));</span><br><span class="line">    &#125;</span><br><span class="line">    bindSummary(pref, tile);</span><br><span class="line">    bindIcon(pref, tile, forceRoundedIcon);</span><br><span class="line">    <span class="keyword">final</span> Bundle metadata = tile.getMetaData();</span><br><span class="line">    String clsName = <span class="keyword">null</span>;</span><br><span class="line">    String action = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (metadata != <span class="keyword">null</span>) &#123;</span><br><span class="line">        clsName = metadata.getString(SettingsActivity.META_DATA_KEY_FRAGMENT_CLASS);</span><br><span class="line">        action = metadata.getString(META_DATA_KEY_INTENT_ACTION);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (!TextUtils.isEmpty(clsName)) &#123;</span><br><span class="line">        pref.setFragment(clsName);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">final</span> Intent intent = <span class="keyword">new</span> Intent(tile.getIntent());</span><br><span class="line">        intent.putExtra(MetricsFeatureProvider.EXTRA_SOURCE_METRICS_CATEGORY,</span><br><span class="line">                sourceMetricsCategory);</span><br><span class="line">        <span class="keyword">if</span> (action != <span class="keyword">null</span>) &#123;</span><br><span class="line">            intent.setAction(action);</span><br><span class="line">        &#125;</span><br><span class="line">        pref.setOnPreferenceClickListener(preference -&gt; &#123;</span><br><span class="line">            launchIntentOrSelectProfile(activity, tile, intent, sourceMetricsCategory);</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">final</span> String skipOffsetPackageName = activity.getPackageName();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (tile.hasOrder()) &#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">int</span> order = tile.getOrder();</span><br><span class="line">        <span class="keyword">boolean</span> shouldSkipBaseOrderOffset = TextUtils.equals(</span><br><span class="line">                skipOffsetPackageName, tile.getIntent().getComponent().getPackageName());</span><br><span class="line">        <span class="keyword">if</span> (shouldSkipBaseOrderOffset || baseOrder == Preference.DEFAULT_ORDER) &#123;</span><br><span class="line">            pref.setOrder(order);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            pref.setOrder(order + baseOrder);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><p>设置preference title，根据getTitle()方法获取title：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pref.setTitle(tile.getTitle(activity.getApplicationContext()));</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Title of the tile that is shown to the user.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> CharSequence <span class="title">getTitle</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">    CharSequence title = <span class="keyword">null</span>;</span><br><span class="line">    ensureMetadataNotStale(context);</span><br><span class="line">    <span class="keyword">final</span> PackageManager packageManager = context.getPackageManager();</span><br><span class="line">    <span class="keyword">if</span> (mMetaData.containsKey(META_DATA_PREFERENCE_TITLE)) &#123;</span><br><span class="line">        <span class="keyword">if</span> (mMetaData.get(META_DATA_PREFERENCE_TITLE) <span class="keyword">instanceof</span> Integer) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">final</span> Resources res =</span><br><span class="line">                        packageManager.getResourcesForApplication(mActivityPackage);</span><br><span class="line">                title = res.getString(mMetaData.getInt(META_DATA_PREFERENCE_TITLE));</span><br><span class="line">            &#125; <span class="keyword">catch</span> (PackageManager.NameNotFoundException | Resources.NotFoundException e) &#123;</span><br><span class="line">                Log.w(TAG, <span class="string">"Couldn't find info"</span>, e);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            title = mMetaData.getString(META_DATA_PREFERENCE_TITLE);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// Set the preference title to the activity's label if no</span></span><br><span class="line">    <span class="comment">// meta-data is found</span></span><br><span class="line">    <span class="keyword">if</span> (title == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">final</span> ActivityInfo activityInfo = getActivityInfo(context);</span><br><span class="line">        <span class="keyword">if</span> (activityInfo == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        title = activityInfo.loadLabel(packageManager);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> title;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>首先确保tile中保存的meta的对象是最新的，再去读取AndroidManifest.xml中是否配置了Activity的meta标签name为”com.android.settings.title”的属性值，如果配置了则以此属性值为preference title；反之则再去尝试读取其AndroidManifest.xml配置的activity的 “android:label”属性值。</p>
+</li>
+<li><p>设置preference的key，主要还是通过调用getDashboardKeyForTile()方法去获取，上面已详细分析过：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!TextUtils.isEmpty(key)) &#123;</span><br><span class="line">	pref.setKey(key);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">	pref.setKey(getDashboardKeyForTile(tile));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置preference的summary:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bindSummary(pref, tile);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">bindSummary</span><span class="params">(Preference preference, Tile tile)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> CharSequence summary = tile.getSummary(mContext);</span><br><span class="line">    <span class="keyword">if</span> (summary != <span class="keyword">null</span>) &#123;</span><br><span class="line">        preference.setSummary(summary);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (tile.getMetaData() != <span class="keyword">null</span></span><br><span class="line">            &amp;&amp; tile.getMetaData().containsKey(META_DATA_PREFERENCE_SUMMARY_URI)) &#123;</span><br><span class="line">        <span class="comment">// Set a placeholder summary before  starting to fetch real summary, this is necessary</span></span><br><span class="line">        <span class="comment">// to avoid preference height change.</span></span><br><span class="line">        preference.setSummary(R.string.summary_placeholder);</span><br><span class="line"></span><br><span class="line">        ThreadUtils.postOnBackgroundThread(() -&gt; &#123;</span><br><span class="line">            <span class="keyword">final</span> Map&lt;String, IContentProvider&gt; providerMap = <span class="keyword">new</span> ArrayMap&lt;&gt;();</span><br><span class="line">            <span class="keyword">final</span> String uri = tile.getMetaData().getString(META_DATA_PREFERENCE_SUMMARY_URI);</span><br><span class="line">            <span class="keyword">final</span> String summaryFromUri = TileUtils.getTextFromUri(</span><br><span class="line">                    mContext, uri, providerMap, META_DATA_PREFERENCE_SUMMARY);</span><br><span class="line">            ThreadUtils.postOnMainThread(() -&gt; preference.setSummary(summaryFromUri));</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        preference.setSummary(R.string.summary_placeholder);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>首先判断tile对象是否设置了mSummaryOverride，是，则以此作为preference的summary；<br>其次再此确保此时tile保存的meta属性是最新的，通过读取”com.android.settings.summary_uri”、”com.android.settings.summary”属性，根据需要取其value作为preference的summary。</p>
+</li>
+<li><p>设置preference的icon，通过读取meta的属性”com.android.settings.icon_uri”、”com.android.settings.icon”的value的值；</p>
+</li>
+<li><p>设置preference的点击跳转界面：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> Bundle metadata = tile.getMetaData();</span><br><span class="line">String clsName = <span class="keyword">null</span>;</span><br><span class="line">String action = <span class="keyword">null</span>;</span><br><span class="line">   </span><br><span class="line"><span class="keyword">if</span> (metadata != <span class="keyword">null</span>) &#123;</span><br><span class="line">    clsName = metadata.getString(SettingsActivity.META_DATA_KEY_FRAGMENT_CLASS);</span><br><span class="line">    action = metadata.getString(META_DATA_KEY_INTENT_ACTION);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (!TextUtils.isEmpty(clsName)) &#123;</span><br><span class="line">    pref.setFragment(clsName);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">final</span> Intent intent = <span class="keyword">new</span> Intent(tile.getIntent());</span><br><span class="line">    intent.putExtra(MetricsFeatureProvider.EXTRA_SOURCE_METRICS_CATEGORY,</span><br><span class="line">            sourceMetricsCategory);</span><br><span class="line">    <span class="keyword">if</span> (action != <span class="keyword">null</span>) &#123;</span><br><span class="line">        intent.setAction(action);</span><br><span class="line">    &#125;</span><br><span class="line">    pref.setOnPreferenceClickListener(preference -&gt; &#123;</span><br><span class="line">        launchIntentOrSelectProfile(activity, tile, intent, sourceMetricsCategory);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果设置了”com.android.settings.FRAGMENT_CLASS”属性，则直接设置此value为跳转的fragment；反之，则构建intent，设置点击监听，跳转activity；</p>
+</li>
+<li><p>如果设置了”com.android.settings.order”属性，则根据其value值来设置preference显示前后。order为负时，绝对值越高，界面显示越靠前；order为正时，值越高，显示越靠后。</p>
+</li>
+</ol>
+<h6 id="总结：-1"><a href="#总结：-1" class="headerlink" title="总结："></a>总结：</h6><ol>
+<li>主要是通过解析tile对象内保存的meta属性去设置preference的title、key、summary、icon、跳转界面、order显示优先级；</li>
+<li>Android 10.0中设置主界面的设置项除了加载三方应用的，其余设置基本都是top_level_settings.xml定义的</li>
+</ol>
+<h6 id="setListening"><a href="#setListening" class="headerlink" title="setListening()"></a>setListening()</h6><blockquote>
+<p>packages/apps/Settings/src/com/android/settings/dashboard/SummaryLoader.java</p>
+</blockquote>
+<p> 回到refreshDashboardTiles()方法，看剩余语句，设置监听，以便于后续各个preference后续可以自行根据需要更新summary：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mSummaryLoader.setListening(<span class="keyword">true</span>);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Only call from the main thread.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setListening</span><span class="params">(<span class="keyword">boolean</span> listening)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (mListening == listening) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    mListening = listening;</span><br><span class="line">    <span class="comment">// Unregister listeners immediately.</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; mReceivers.size(); i++) &#123;</span><br><span class="line">        mActivity.unregisterReceiver(mReceivers.valueAt(i));</span><br><span class="line">    &#125;</span><br><span class="line">    mReceivers.clear();</span><br><span class="line"></span><br><span class="line">    mWorker.removeMessages(Worker.MSG_SET_LISTENING);</span><br><span class="line">    <span class="keyword">if</span> (!listening) &#123;</span><br><span class="line">        <span class="comment">// Stop listen</span></span><br><span class="line">        mWorker.obtainMessage(Worker.MSG_SET_LISTENING, <span class="number">0</span> <span class="comment">/* listening */</span>).sendToTarget();</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// Start listen</span></span><br><span class="line">        <span class="keyword">if</span> (mSummaryProviderMap.isEmpty()) &#123;</span><br><span class="line">            <span class="comment">// Category not initialized yet, init before starting to listen</span></span><br><span class="line">            <span class="keyword">if</span> (!mWorker.hasMessages(Worker.MSG_GET_CATEGORY_TILES_AND_SET_LISTENING)) &#123;</span><br><span class="line">                mWorker.sendEmptyMessage(Worker.MSG_GET_CATEGORY_TILES_AND_SET_LISTENING);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// Category already initialized, start listening immediately</span></span><br><span class="line">            mWorker.obtainMessage(Worker.MSG_SET_LISTENING, <span class="number">1</span> <span class="comment">/* listening */</span>).sendToTarget();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>清除遗留的handle消息”MSG_SET_LISTENING”；</li>
+<li>listening为false时，表面需要暂停监听；</li>
+<li>为true时，判断是否已经初始化mSummaryProviderMap，是则直接发送”MSG_SET_LISTENING”消息，开始监听。否则发送”MSG_GET_CATEGORY_TILES_AND_SET_LISTENING”消息，初始化并开启监听；</li>
+</ol>
+<p>直接看Work：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">Worker</span> <span class="keyword">extends</span> <span class="title">Handler</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MSG_GET_CATEGORY_TILES_AND_SET_LISTENING = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MSG_GET_PROVIDER = <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MSG_SET_LISTENING = <span class="number">3</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Worker</span><span class="params">(Looper looper)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(looper);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleMessage</span><span class="params">(Message msg)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">switch</span> (msg.what) &#123;</span><br><span class="line">            <span class="keyword">case</span> MSG_GET_CATEGORY_TILES_AND_SET_LISTENING:</span><br><span class="line">                <span class="keyword">final</span> DashboardCategory category =</span><br><span class="line">                        mDashboardFeatureProvider.getTilesForCategory(mCategoryKey);</span><br><span class="line">                <span class="keyword">if</span> (category == <span class="keyword">null</span> || category.getTilesCount() == <span class="number">0</span>) &#123;</span><br><span class="line">                    <span class="keyword">return</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">final</span> List&lt;Tile&gt; tiles = category.getTiles();</span><br><span class="line">                <span class="keyword">for</span> (Tile tile : tiles) &#123;</span><br><span class="line">                    makeProviderW(tile);</span><br><span class="line">                &#125;</span><br><span class="line">                setListeningW(<span class="keyword">true</span>);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> MSG_GET_PROVIDER:</span><br><span class="line">                Tile tile = (Tile) msg.obj;</span><br><span class="line">                makeProviderW(tile);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> MSG_SET_LISTENING:</span><br><span class="line">                <span class="keyword">boolean</span> listening = msg.obj != <span class="keyword">null</span> &amp;&amp; msg.obj.equals(<span class="number">1</span>);</span><br><span class="line">                setListeningW(listening);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>“MSG_GET_CATEGORY_TILES_AND_SET_LISTENING”:</p>
+<ol>
+<li><p>调用getTilesForCategory()、getTiles()方法获取可以显示在当前界面的设置项，这两个方法上面都有分析到；</p>
+</li>
+<li><p>makeProviderW()：遍历tiles集合，执行makeProviderW()方法，获取每个tile对象的SummaryProvider对象，填充mSummaryProviderMap集合：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">makeProviderW</span><span class="params">(Tile tile)</span> </span>&#123;</span><br><span class="line">    SummaryProvider provider = getSummaryProvider(tile);</span><br><span class="line">    <span class="keyword">if</span> (provider != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (DEBUG) Log.d(TAG, <span class="string">"Creating "</span> + tile);</span><br><span class="line">        mSummaryProviderMap.put(provider, tile.getIntent().getComponent());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>调用getSummaryProvider()方法获取SummaryProvider：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> SummaryProvider <span class="title">getSummaryProvider</span><span class="params">(Tile tile)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!mActivity.getPackageName().equals(tile.getPackageName())) &#123;</span><br><span class="line">        <span class="comment">// Not within Settings, can't load Summary directly.</span></span><br><span class="line">        <span class="comment">// <span class="doctag">TODO:</span> Load summary indirectly.</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">final</span> Bundle metaData = tile.getMetaData();</span><br><span class="line">    <span class="keyword">final</span> Intent intent = tile.getIntent();</span><br><span class="line">    <span class="keyword">if</span> (metaData == <span class="keyword">null</span>) &#123;</span><br><span class="line">        Log.d(TAG, <span class="string">"No metadata specified for "</span> + intent.getComponent());</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">final</span> String clsName = metaData.getString(SettingsActivity.META_DATA_KEY_FRAGMENT_CLASS);</span><br><span class="line">    <span class="keyword">if</span> (clsName == <span class="keyword">null</span>) &#123;</span><br><span class="line">        Log.d(TAG, <span class="string">"No fragment specified for "</span> + intent.getComponent());</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        Class&lt;?&gt; cls = Class.forName(clsName);</span><br><span class="line">        Field field = cls.getField(SUMMARY_PROVIDER_FACTORY);</span><br><span class="line">        SummaryProviderFactory factory = (SummaryProviderFactory) field.get(<span class="keyword">null</span>);</span><br><span class="line">        <span class="keyword">return</span> factory.createSummaryProvider(mActivity, <span class="keyword">this</span>);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">        <span class="keyword">if</span> (DEBUG) Log.d(TAG, <span class="string">"Couldn't find "</span> + clsName, e);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (NoSuchFieldException e) &#123;</span><br><span class="line">        <span class="keyword">if</span> (DEBUG) Log.d(TAG, <span class="string">"Couldn't find "</span> + SUMMARY_PROVIDER_FACTORY, e);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (ClassCastException e) &#123;</span><br><span class="line">        <span class="keyword">if</span> (DEBUG) Log.d(TAG, <span class="string">"Couldn't cast "</span> + SUMMARY_PROVIDER_FACTORY, e);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IllegalAccessException e) &#123;</span><br><span class="line">        <span class="keyword">if</span> (DEBUG) Log.d(TAG, <span class="string">"Couldn't get "</span> + SUMMARY_PROVIDER_FACTORY, e);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>解析tile对象内保存的meta属性name为”com.android.settings.FRAGMENT_CLASS”的value值，获取class name，通过反射获取该类的”SUMMARY_PROVIDER_FACTORY”变量，调用SummaryProviderFactory接口方法createSummaryProvider()，而其方法的具体实现是在此类中，以DateTimeSettings.java类为例：</p>
+<blockquote>
+<p> packages/apps/Settings/src/com/android/settings/DateTimeSettings.java：</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">SummaryProvider</span> <span class="keyword">implements</span> <span class="title">SummaryLoader</span>.<span class="title">SummaryProvider</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Context mContext;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> SummaryLoader mSummaryLoader;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SummaryProvider</span><span class="params">(Context context, SummaryLoader summaryLoader)</span> </span>&#123;</span><br><span class="line">        mContext = context;</span><br><span class="line">        mSummaryLoader = summaryLoader;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setListening</span><span class="params">(<span class="keyword">boolean</span> listening)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (listening) &#123;</span><br><span class="line">            <span class="keyword">final</span> Calendar now = Calendar.getInstance();</span><br><span class="line">            mSummaryLoader.setSummary(<span class="keyword">this</span>, ZoneGetter.getTimeZoneOffsetAndName(mContext,</span><br><span class="line">                    now.getTimeZone(), now.getTime()));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> SummaryLoader.SummaryProviderFactory SUMMARY_PROVIDER_FACTORY</span><br><span class="line">        = <span class="keyword">new</span> SummaryLoader.SummaryProviderFactory() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> SummaryLoader.<span class="function">SummaryProvider <span class="title">createSummaryProvider</span><span class="params">(Activity activity,</span></span></span><br><span class="line"><span class="function"><span class="params">            SummaryLoader summaryLoader)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> SummaryProvider(activity, summaryLoader);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>故getSummaryProvider()方法实质就是返回tile对象相对应的类内定义的SummaryProvider的对象，而此mSummaryProviderMap内保存的就是所有AndroidManifest.xml中定义的可在界面显示的设置项的类内定义的SummaryProvider的对象。</p>
+</li>
+<li><p>调用setListeningW方法，开始监听：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">setListeningW</span><span class="params">(<span class="keyword">boolean</span> listening)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (mWorkerListening == listening) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    mWorkerListening = listening;</span><br><span class="line">    <span class="keyword">if</span> (DEBUG) &#123;</span><br><span class="line">        Log.d(TAG, <span class="string">"Listening "</span> + listening);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (SummaryProvider p : mSummaryProviderMap.keySet()) &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            p.setListening(listening);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            Log.d(TAG, <span class="string">"Problem in setListening"</span>, e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p>可以看到所谓的开始”监听”，也只不过是遍历所有的SummaryProvider对象，调用其setListening()方法；</p>
+<p><strong>MSG_GET_PROVIDER</strong>：</p>
+<p><strong>MSG_SET_LISTENING：</strong></p>
+<p>这两个消息实质也是分别调用makeProviderW()、setListeningW()方法；</p>
+<h6 id="总结：-2"><a href="#总结：-2" class="headerlink" title="总结："></a>总结：</h6><p>遍历当前通过AndroidManifest.xml配置的可以显示的设置项的fragment，判断其内是否定义变量”SUMMARY_PROVIDER_FACTORY”，调用接口方法setListening()方法，实现设置项preference的summary的更新。</p>
+<h5 id="总结：-3"><a href="#总结：-3" class="headerlink" title="总结："></a>总结：</h5><ol>
+<li>refreshDashboardTiles()主要是动态的通过PM从AndroidManifest.xml中读取相关配置来加载可以显示的设置item；</li>
+<li>getTilesForCategory()；通过PM去检索AndroidManifest.xml中符合相关action的可以显示在当前fragment上的设置项；</li>
+<li>bindPreferenceToTile()；解析AndroidManifest.xml中配置的meta属性来对设置项preference进行数据绑定；</li>
+<li>setListening()；预留接口，方便各个设置项本身可以通过此来更新preference的summary；</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/10/12/Java%E8%B0%83%E7%94%A8%E5%86%85%E9%83%A8%E7%B1%BB/" rel="prev" title="Java调用内部类">
+      <i class="fa fa-chevron-left"></i> Java调用内部类
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-6"><a class="nav-link" href="#DashboardFragmentRegistry-java"><span class="nav-number">1.</span> <span class="nav-text">DashboardFragmentRegistry.java</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#refreshDashboardTiles"><span class="nav-number">2.</span> <span class="nav-text">refreshDashboardTiles()</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#getTilesForCategory"><span class="nav-number">3.</span> <span class="nav-text">getTilesForCategory()</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#总结："><span class="nav-number">4.</span> <span class="nav-text">总结：</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#bindPreferenceToTile"><span class="nav-number">5.</span> <span class="nav-text">bindPreferenceToTile()</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#总结：-1"><span class="nav-number">6.</span> <span class="nav-text">总结：</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#setListening"><span class="nav-number">7.</span> <span class="nav-text">setListening()</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#总结：-2"><span class="nav-number">8.</span> <span class="nav-text">总结：</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#总结：-3"><span class="nav-number"></span> <span class="nav-text">总结：</span></a></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Rain.G"
+      src="/images/wx.JPG">
+  <p class="site-author-name" itemprop="name">Rain.G</p>
+  <div class="site-description" itemprop="description">愿你一生努力，一生被爱</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">29</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/rain-G-G" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;rain-G-G" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-heartbeat fa-fw"></i>
+      友情链接
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://blog.csdn.net/sinat_37781304/article/details/82729029?depth_1-utm_source=distribute.wap_relevant.none-task-blog-BlogCommendFromBaidu-1&utm_source=distribute.wap_relevant.none-task-blog-BlogCommendFromBaidu-1&from=singlemessage&isappinstalled=0" title="https:&#x2F;&#x2F;blog.csdn.net&#x2F;sinat_37781304&#x2F;article&#x2F;details&#x2F;82729029?depth_1-utm_source&#x3D;distribute.wap_relevant.none-task-blog-BlogCommendFromBaidu-1&amp;utm_source&#x3D;distribute.wap_relevant.none-task-blog-BlogCommendFromBaidu-1&amp;from&#x3D;singlemessage&amp;isappinstalled&#x3D;0" rel="noopener" target="_blank">Hexo搭建</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.jianshu.com/p/85ea951ce996?from=singlemessage&isappinstalled=0" title="https:&#x2F;&#x2F;www.jianshu.com&#x2F;p&#x2F;85ea951ce996?from&#x3D;singlemessage&amp;isappinstalled&#x3D;0" rel="noopener" target="_blank">NexT美化</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Rain.G</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
