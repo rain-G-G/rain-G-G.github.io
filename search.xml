@@ -608,29 +608,6 @@
     
     
     <entry>
-      <title>Handler</title>
-      <link href="2021/04/18/Handler%E6%9C%BA%E5%88%B6/"/>
-      <url>2021/04/18/Handler%E6%9C%BA%E5%88%B6/</url>
-      
-        <content type="html"><![CDATA[<h6 id="Handler机制-基本用法"><a href="#Handler机制-基本用法" class="headerlink" title="Handler机制    基本用法"></a>Handler机制    <a href="https://www.jianshu.com/p/fa1450b0bbf6" target="_blank" rel="noopener">基本用法</a></h6>]]></content>
-      
-      
-      <categories>
-          
-          <category> Android </category>
-          
-          <category> Android 基础知识 </category>
-          
-          <category> Android 通信 </category>
-          
-      </categories>
-      
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>View体系、动画</title>
       <link href="2021/04/18/View%20%E4%BD%93%E7%B3%BB/"/>
       <url>2021/04/18/View%20%E4%BD%93%E7%B3%BB/</url>
@@ -645,6 +622,29 @@
           <category> Android 基础知识 </category>
           
           <category> Android UI控件 </category>
+          
+      </categories>
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Handler</title>
+      <link href="2021/04/18/Handler%E6%9C%BA%E5%88%B6/"/>
+      <url>2021/04/18/Handler%E6%9C%BA%E5%88%B6/</url>
+      
+        <content type="html"><![CDATA[<h6 id="Handler机制-基本用法"><a href="#Handler机制-基本用法" class="headerlink" title="Handler机制    基本用法"></a>Handler机制    <a href="https://www.jianshu.com/p/fa1450b0bbf6" target="_blank" rel="noopener">基本用法</a></h6>]]></content>
+      
+      
+      <categories>
+          
+          <category> Android </category>
+          
+          <category> Android 基础知识 </category>
+          
+          <category> Android 通信 </category>
           
       </categories>
       
