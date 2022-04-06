@@ -407,7 +407,7 @@
       <link href="2021/07/08/%C2%96%C2%96%E9%80%9A%E7%9F%A5%E5%88%97%E8%A1%A8%E4%B8%AD%E7%9A%84%E5%9B%BE%E6%A0%87%E6%98%BE%E7%A4%BA%E4%B8%BA%E7%81%B0%E8%89%B2%E6%96%B9%E6%A1%86/"/>
       <url>2021/07/08/%C2%96%C2%96%E9%80%9A%E7%9F%A5%E5%88%97%E8%A1%A8%E4%B8%AD%E7%9A%84%E5%9B%BE%E6%A0%87%E6%98%BE%E7%A4%BA%E4%B8%BA%E7%81%B0%E8%89%B2%E6%96%B9%E6%A1%86/</url>
       
-        <content type="html"><![CDATA[<p>通知列表中的图标显示为灰色方框？<br>解决方法：RemoteViews里有成员变量mApplication，方法isSystemApp()，判断是否为系统app，再决定是否上色，因为系统app的图标都是正常的。</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">processSmallIconColor</span><span class="params">(Icon smallIcon, RemoteViews contentView,</span></span></span><br><span class="line"><span class="function"><span class="params">               StandardTemplateParams p)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">boolean</span> colorable = !isLegacy() || getColorUtil().isGrayscaleIcon(mContext, smallIcon);<span class="comment">//判断是否上色</span></span><br><span class="line">    <span class="comment">//add by wangxin</span></span><br><span class="line">    ApplicationInfo applicationInfo = contentView.mApplication;</span><br><span class="line">    <span class="keyword">boolean</span> isSystemApp = applicationInfo.isSystemApp();</span><br><span class="line">    String packageName = applicationInfo.packageName;</span><br><span class="line">    android.util.Log.v(TAG, <span class="string">"isSystemApp = "</span> + isSystemApp + <span class="string">" packageName = "</span> + packageName );</span><br><span class="line">    colorable = isSystemApp ? <span class="keyword">true</span> : <span class="keyword">false</span>;</span><br><span class="line">    <span class="keyword">if</span> (<span class="string">"com.baidu.input_huawei"</span>.equals(packageName) || <span class="string">"com.cadothy.broadcast"</span>.equals(packageName)) &#123;<span class="comment">//过滤特殊app</span></span><br><span class="line">        colorable = <span class="keyword">false</span>;</span><br><span class="line">    &#125;<span class="comment">//add end</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> color;</span><br><span class="line">    <span class="keyword">if</span> (isColorized(p)) &#123;</span><br><span class="line">        color = getPrimaryTextColor(p);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    contentView.setInt(R.id.notification_header, <span class="string">"setOriginalIconColor"</span>,</span><br><span class="line">                       colorable ? color : NotificationHeaderView.NO_COLOR);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+        <content type="html"><![CDATA[<p>通知列表中的图标显示为灰色方框？<br>解决方法：RemoteViews里有成员变量mApplication，方法isSystemApp()，判断是否为系统app，再决定是否上色，因为系统app的图标都是正常的。</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">processSmallIconColor</span><span class="params">(Icon smallIcon, RemoteViews contentView,</span></span></span><br><span class="line"><span class="function"><span class="params">               StandardTemplateParams p)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">boolean</span> colorable = getColorUtil().isGrayscaleIcon(mContext, smallIcon);<span class="comment">//判断是否上色</span></span><br><span class="line">    <span class="comment">//add by wangxin</span></span><br><span class="line">    ApplicationInfo applicationInfo = contentView.mApplication;</span><br><span class="line">    <span class="keyword">boolean</span> isSystemApp = applicationInfo.isSystemApp();</span><br><span class="line">    String packageName = applicationInfo.packageName;</span><br><span class="line">    android.util.Log.v(TAG, <span class="string">"isSystemApp = "</span> + isSystemApp + <span class="string">" packageName = "</span> + packageName );</span><br><span class="line">    colorable = isSystemApp ? <span class="keyword">true</span> : <span class="keyword">false</span>;</span><br><span class="line">    <span class="keyword">if</span> (<span class="string">"com.baidu.input_huawei"</span>.equals(packageName) || <span class="string">"com.cadothy.broadcast"</span>.equals(packageName)) &#123;<span class="comment">//过滤特殊app</span></span><br><span class="line">        colorable = <span class="keyword">false</span>;</span><br><span class="line">    &#125;<span class="comment">//add end</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> color;</span><br><span class="line">    <span class="keyword">if</span> (isColorized(p)) &#123;</span><br><span class="line">        color = getPrimaryTextColor(p);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    contentView.setInt(R.id.notification_header, <span class="string">"setOriginalIconColor"</span>,</span><br><span class="line">                       colorable ? color : COLOR_DEFAULT);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
       
       
       <categories>
@@ -560,6 +560,31 @@
     
     
     <entry>
+      <title>Activity</title>
+      <link href="2021/04/18/Activity/"/>
+      <url>2021/04/18/Activity/</url>
+      
+        <content type="html"><![CDATA[<h6 id="Activity-生命周期、状态-使用"><a href="#Activity-生命周期、状态-使用" class="headerlink" title="Activity 生命周期、状态   使用"></a>Activity 生命周期、状态   <a href="https://blog.csdn.net/qq_36270361/article/details/107141162" target="_blank" rel="noopener">使用</a></h6>]]></content>
+      
+      
+      <categories>
+          
+          <category> Android </category>
+          
+          <category> Android 基础知识 </category>
+          
+          <category> 四大组件 </category>
+          
+          <category> Activity </category>
+          
+      </categories>
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>AsyncTask</title>
       <link href="2021/04/18/AsyncTask/"/>
       <url>2021/04/18/AsyncTask/</url>
@@ -597,31 +622,6 @@
           <category> Android 基础知识 </category>
           
           <category> Android 通信 </category>
-          
-      </categories>
-      
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>Activity</title>
-      <link href="2021/04/18/Activity/"/>
-      <url>2021/04/18/Activity/</url>
-      
-        <content type="html"><![CDATA[<h6 id="Activity-生命周期、状态-使用"><a href="#Activity-生命周期、状态-使用" class="headerlink" title="Activity 生命周期、状态   使用"></a>Activity 生命周期、状态   <a href="https://blog.csdn.net/qq_36270361/article/details/107141162" target="_blank" rel="noopener">使用</a></h6>]]></content>
-      
-      
-      <categories>
-          
-          <category> Android </category>
-          
-          <category> Android 基础知识 </category>
-          
-          <category> 四大组件 </category>
-          
-          <category> Activity </category>
           
       </categories>
       
