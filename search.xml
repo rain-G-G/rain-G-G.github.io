@@ -4,6 +4,19 @@
   
     
     <entry>
+      <title>“发“送到发送到发”</title>
+      <link href="2022/04/07/%E2%80%9C%E5%8F%91%E2%80%9C%E9%80%81%E5%88%B0%E5%8F%91%E9%80%81%E5%88%B0%E5%8F%91%E2%80%9D/"/>
+      <url>2022/04/07/%E2%80%9C%E5%8F%91%E2%80%9C%E9%80%81%E5%88%B0%E5%8F%91%E9%80%81%E5%88%B0%E5%8F%91%E2%80%9D/</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Settings10主界面加载(二)</title>
       <link href="2021/10/14/Settings10%E4%B8%BB%E7%95%8C%E9%9D%A2%E5%8A%A0%E8%BD%BD(%E4%BA%8C)/"/>
       <url>2021/10/14/Settings10%E4%B8%BB%E7%95%8C%E9%9D%A2%E5%8A%A0%E8%BD%BD(%E4%BA%8C)/</url>
@@ -608,29 +621,6 @@
     
     
     <entry>
-      <title>View体系、动画</title>
-      <link href="2021/04/18/View%20%E4%BD%93%E7%B3%BB/"/>
-      <url>2021/04/18/View%20%E4%BD%93%E7%B3%BB/</url>
-      
-        <content type="html"><![CDATA[<h6 id="View-体系，包括动画"><a href="#View-体系，包括动画" class="headerlink" title="View 体系，包括动画"></a>View 体系，包括动画</h6>]]></content>
-      
-      
-      <categories>
-          
-          <category> Android </category>
-          
-          <category> Android 基础知识 </category>
-          
-          <category> Android UI控件 </category>
-          
-      </categories>
-      
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>Handler</title>
       <link href="2021/04/18/Handler%E6%9C%BA%E5%88%B6/"/>
       <url>2021/04/18/Handler%E6%9C%BA%E5%88%B6/</url>
@@ -645,6 +635,29 @@
           <category> Android 基础知识 </category>
           
           <category> Android 通信 </category>
+          
+      </categories>
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>View体系、动画</title>
+      <link href="2021/04/18/View%20%E4%BD%93%E7%B3%BB/"/>
+      <url>2021/04/18/View%20%E4%BD%93%E7%B3%BB/</url>
+      
+        <content type="html"><![CDATA[<h6 id="View-体系，包括动画"><a href="#View-体系，包括动画" class="headerlink" title="View 体系，包括动画"></a>View 体系，包括动画</h6>]]></content>
+      
+      
+      <categories>
+          
+          <category> Android </category>
+          
+          <category> Android 基础知识 </category>
+          
+          <category> Android UI控件 </category>
           
       </categories>
       
