@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>系统中使用自定义Aidl文件</title>
+      <link href="2022/05/26/%E7%B3%BB%E7%BB%9F%E4%B8%AD%E4%BD%BF%E7%94%A8%E8%87%AA%E5%AE%9A%E4%B9%89Aidl%E6%96%87%E4%BB%B6/"/>
+      <url>2022/05/26/%E7%B3%BB%E7%BB%9F%E4%B8%AD%E4%BD%BF%E7%94%A8%E8%87%AA%E5%AE%9A%E4%B9%89Aidl%E6%96%87%E4%BB%B6/</url>
+      
+        <content type="html"><![CDATA[<p>俩种方式：</p><h6 id="一、同一包名中相同路径下使用aidl"><a href="#一、同一包名中相同路径下使用aidl" class="headerlink" title="一、同一包名中相同路径下使用aidl:"></a>一、同一包名中相同路径下使用aidl:</h6><p><a href="https://baijiahao.baidu.com/s?id=1661643244633351477&wfr=spider&for=pc" target="_blank" rel="noopener">参考文章</a></p><p><code>packages/apps/DocumentsUI/src/com/android/documentsui/shared/IDocumentManager.aidl</code></p><p><code>packages/apps/Launcher3/SecondartDisplayLauncher/aidl/com/android/documentsui/shared/IDocumentManager.aidl</code></p><p>同一包名中相同路径下：<code>com/android/documentsui/shared/IDocumentManager.aidl</code></p><p>最重要的是要让系统编译这个<code>aidl</code>文件，<code>LOCAL_SRC_FILES += $(call all-Iaidl-files-under, src)</code></p><p>其中括号中指的是编译文件类型，<code>src</code>指的是编译目录，在这个例子中编译的目录就为<code>aidl</code></p><h6 id="二、将aidl打包生成系统静态库："><a href="#二、将aidl打包生成系统静态库：" class="headerlink" title="二、将aidl打包生成系统静态库："></a>二、将aidl打包生成系统静态库：</h6><p><code>launcher</code>和<code>SystemUI</code>通信就是这种方式，<code>Launcher</code>中引用<code>SystemUISharedLib</code>，实现跨进程通信。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Android </category>
+          
+          <category> Android 基础知识 </category>
+          
+          <category> Android 通信 </category>
+          
+          <category> 进程通信 </category>
+          
+      </categories>
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Android系统版本为releasekey</title>
       <link href="2022/04/10/Android%E7%B3%BB%E7%BB%9F%E7%89%88%E6%9C%AC%E4%B8%BAreleasekey/"/>
       <url>2022/04/10/Android%E7%B3%BB%E7%BB%9F%E7%89%88%E6%9C%AC%E4%B8%BAreleasekey/</url>

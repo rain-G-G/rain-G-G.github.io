@@ -179,7 +179,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://wxyy97.com/2021/04/22/%E7%8A%B6%E6%80%81%E6%A0%8F%E5%9B%BE%E6%A0%87%E5%88%B7%E6%96%B0/">
+    <link itemprop="mainEntityOfPage" href="http://wxyy97.com/2022/05/26/%E7%B3%BB%E7%BB%9F%E4%B8%AD%E4%BD%BF%E7%94%A8%E8%87%AA%E5%AE%9A%E4%B9%89Aidl%E6%96%87%E4%BB%B6/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/wx.JPG">
@@ -193,7 +193,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/04/22/%E7%8A%B6%E6%80%81%E6%A0%8F%E5%9B%BE%E6%A0%87%E5%88%B7%E6%96%B0/" class="post-title-link" itemprop="url">状态栏图标刷新</a>
+            <a href="/2022/05/26/%E7%B3%BB%E7%BB%9F%E4%B8%AD%E4%BD%BF%E7%94%A8%E8%87%AA%E5%AE%9A%E4%B9%89Aidl%E6%96%87%E4%BB%B6/" class="post-title-link" itemprop="url">系统中使用自定义Aidl文件</a>
         </h2>
 
         <div class="post-meta">
@@ -202,16 +202,10 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
+              
 
-              <time title="Created: 2021-04-22 22:29:46" itemprop="dateCreated datePublished" datetime="2021-04-22T22:29:46+08:00">2021-04-22</time>
+              <time title="Created: 2022-05-26 20:14:27 / Modified: 21:13:43" itemprop="dateCreated datePublished" datetime="2022-05-26T20:14:27+08:00">2022-05-26</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-10-12 22:24:46" itemprop="dateModified" datetime="2021-10-12T22:24:46+08:00">2021-10-12</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -222,11 +216,15 @@
                 </span>
                   , 
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/Android-%E5%BA%94%E7%94%A8%E5%B1%82/" itemprop="url" rel="index"><span itemprop="name">Android 应用层</span></a>
+                  <a href="/categories/Android/Android-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" itemprop="url" rel="index"><span itemprop="name">Android 基础知识</span></a>
                 </span>
                   , 
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/Android-%E5%BA%94%E7%94%A8%E5%B1%82/SystemUI/" itemprop="url" rel="index"><span itemprop="name">SystemUI</span></a>
+                  <a href="/categories/Android/Android-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Android-%E9%80%9A%E4%BF%A1/" itemprop="url" rel="index"><span itemprop="name">Android 通信</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Android-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Android-%E9%80%9A%E4%BF%A1/%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1/" itemprop="url" rel="index"><span itemprop="name">进程通信</span></a>
                 </span>
             </span>
 
@@ -241,10 +239,89 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>状态栏图标刷新分析</p>
+          <p>最近在俩个系统app中使用aidl接口实现了跨进程通信。因为是第一次在系统应用之间使用，所以将方式记录下。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2021/04/22/%E7%8A%B6%E6%80%81%E6%A0%8F%E5%9B%BE%E6%A0%87%E5%88%B7%E6%96%B0/">
+              <a class="btn" href="/2022/05/26/%E7%B3%BB%E7%BB%9F%E4%B8%AD%E4%BD%BF%E7%94%A8%E8%87%AA%E5%AE%9A%E4%B9%89Aidl%E6%96%87%E4%BB%B6/">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://wxyy97.com/2021/07/21/%E5%B1%8F%E8%94%BD%E8%BF%94%E5%9B%9E%E9%94%AE%E5%92%8C%E5%A4%9A%E4%BB%BB%E5%8A%A1%E9%94%AE%E5%8A%9F%E8%83%BD/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/wx.JPG">
+      <meta itemprop="name" content="Rain.G">
+      <meta itemprop="description" content="愿你一生努力，一生被爱">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Rain.G">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/07/21/%E5%B1%8F%E8%94%BD%E8%BF%94%E5%9B%9E%E9%94%AE%E5%92%8C%E5%A4%9A%E4%BB%BB%E5%8A%A1%E9%94%AE%E5%8A%9F%E8%83%BD/" class="post-title-link" itemprop="url">屏蔽返回键和多任务键功能</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-07-21 23:24:16 / Modified: 23:27:26" itemprop="dateCreated datePublished" datetime="2021-07-21T23:24:16+08:00">2021-07-21</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Android-bug%E5%88%86%E6%9E%90/" itemprop="url" rel="index"><span itemprop="name">Android bug分析</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>Android屏蔽返回键和多任务键功能</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/07/21/%E5%B1%8F%E8%94%BD%E8%BF%94%E5%9B%9E%E9%94%AE%E5%92%8C%E5%A4%9A%E4%BB%BB%E5%8A%A1%E9%94%AE%E5%8A%9F%E8%83%BD/">
                 Read more &raquo;
               </a>
             </div>
@@ -334,95 +411,6 @@
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2021/04/22/%E7%8A%B6%E6%80%81%E6%A0%8F%E6%B7%BB%E5%8A%A0%E9%80%9A%E7%9F%A5%E5%9B%BE%E6%A0%87/">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://wxyy97.com/2021/09/08/%E7%94%A8%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8Cshell%E5%91%BD%E4%BB%A4/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/wx.JPG">
-      <meta itemprop="name" content="Rain.G">
-      <meta itemprop="description" content="愿你一生努力，一生被爱">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Rain.G">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/09/08/%E7%94%A8%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8Cshell%E5%91%BD%E4%BB%A4/" class="post-title-link" itemprop="url">用代码执行shell命令</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-09-08 21:36:45" itemprop="dateCreated datePublished" datetime="2021-09-08T21:36:45+08:00">2021-09-08</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-10-11 20:56:55" itemprop="dateModified" datetime="2021-10-11T20:56:55+08:00">2021-10-11</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/Android-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" itemprop="url" rel="index"><span itemprop="name">Android 基础知识</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/Android-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/shell-%E5%91%BD%E4%BB%A4/" itemprop="url" rel="index"><span itemprop="name">shell 命令</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>记得刚毕业时安排我做的云手机，0基础，遇到安装应用时大佬让我按照其他apk模仿，也不明白什么意思，又发现一个盲区，暂时先记录后期补上。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/09/08/%E7%94%A8%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8Cshell%E5%91%BD%E4%BB%A4/">
                 Read more &raquo;
               </a>
             </div>
@@ -539,7 +527,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://wxyy97.com/2021/09/08/%E8%A7%86%E9%A2%91%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%82%B9/">
+    <link itemprop="mainEntityOfPage" href="http://wxyy97.com/2021/10/14/Settings10%E4%B8%BB%E7%95%8C%E9%9D%A2%E5%8A%A0%E8%BD%BD(%E4%BA%8C)/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/wx.JPG">
@@ -553,7 +541,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/09/08/%E8%A7%86%E9%A2%91%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%82%B9/" class="post-title-link" itemprop="url">视频基础知识点</a>
+            <a href="/2021/10/14/Settings10%E4%B8%BB%E7%95%8C%E9%9D%A2%E5%8A%A0%E8%BD%BD(%E4%BA%8C)/" class="post-title-link" itemprop="url">Settings10主界面加载(二)</a>
         </h2>
 
         <div class="post-meta">
@@ -562,16 +550,10 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
+              
 
-              <time title="Created: 2021-09-08 21:29:28" itemprop="dateCreated datePublished" datetime="2021-09-08T21:29:28+08:00">2021-09-08</time>
+              <time title="Created: 2021-10-14 21:29:40 / Modified: 21:31:56" itemprop="dateCreated datePublished" datetime="2021-10-14T21:29:40+08:00">2021-10-14</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-10-11 20:58:27" itemprop="dateModified" datetime="2021-10-11T20:58:27+08:00">2021-10-11</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -582,15 +564,15 @@
                 </span>
                   , 
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/Android-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" itemprop="url" rel="index"><span itemprop="name">Android 基础知识</span></a>
+                  <a href="/categories/Android/Android-%E5%BA%94%E7%94%A8%E5%B1%82/" itemprop="url" rel="index"><span itemprop="name">Android 应用层</span></a>
                 </span>
                   , 
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/Android-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E9%9F%B3%E8%A7%86%E9%A2%91%E5%9B%BE%E7%89%87%E5%BC%80%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">音视频图片开发</span></a>
+                  <a href="/categories/Android/Android-%E5%BA%94%E7%94%A8%E5%B1%82/%E8%AE%BE%E7%BD%AE/" itemprop="url" rel="index"><span itemprop="name">设置</span></a>
                 </span>
                   , 
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/Android-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E9%9F%B3%E8%A7%86%E9%A2%91%E5%9B%BE%E7%89%87%E5%BC%80%E5%8F%91/%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">视频开发</span></a>
+                  <a href="/categories/Android/Android-%E5%BA%94%E7%94%A8%E5%B1%82/%E8%AE%BE%E7%BD%AE/%E8%AE%BE%E7%BD%AE%E4%B8%BB%E7%95%8C%E9%9D%A2%E5%8A%A0%E8%BD%BD-%E4%BA%8C/" itemprop="url" rel="index"><span itemprop="name">设置主界面加载(二)</span></a>
                 </span>
             </span>
 
@@ -605,10 +587,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>这几天接触到了视频的基础知识，先做个记录。</p>
+          <p>上篇《设置主界面加载(一)》主要记录了主界面xml静态加载(调用displayResourceTiles()方法)，本篇主要记录从代码中动态加载设置项(调用refreshDashboardTiles(TAG)方法，其中TAG为 “TopLevelSettings”)。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2021/09/08/%E8%A7%86%E9%A2%91%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%82%B9/">
+              <a class="btn" href="/2021/10/14/Settings10%E4%B8%BB%E7%95%8C%E9%9D%A2%E5%8A%A0%E8%BD%BD(%E4%BA%8C)/">
                 Read more &raquo;
               </a>
             </div>
@@ -717,7 +699,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://wxyy97.com/2021/09/28/Android%E5%88%A4%E6%96%AD%E7%BD%91%E7%BB%9C%E7%B1%BB%E5%9E%8B%E5%B7%A5%E5%85%B7%E7%B1%BB/">
+    <link itemprop="mainEntityOfPage" href="http://wxyy97.com/2021/09/28/Android%E7%B3%BB%E7%BB%9F%E7%89%88%E6%9C%AC%E5%8F%B7/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/wx.JPG">
@@ -731,7 +713,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/09/28/Android%E5%88%A4%E6%96%AD%E7%BD%91%E7%BB%9C%E7%B1%BB%E5%9E%8B%E5%B7%A5%E5%85%B7%E7%B1%BB/" class="post-title-link" itemprop="url">Android判断网络类型工具类</a>
+            <a href="/2021/09/28/Android%E7%B3%BB%E7%BB%9F%E7%89%88%E6%9C%AC%E5%8F%B7/" class="post-title-link" itemprop="url">Android系统版本号</a>
         </h2>
 
         <div class="post-meta">
@@ -742,7 +724,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2021-09-28 22:29:51 / Modified: 22:59:31" itemprop="dateCreated datePublished" datetime="2021-09-28T22:29:51+08:00">2021-09-28</time>
+              <time title="Created: 2021-09-28 21:18:27 / Modified: 21:27:28" itemprop="dateCreated datePublished" datetime="2021-09-28T21:18:27+08:00">2021-09-28</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -762,7 +744,7 @@
                 </span>
                   , 
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/Android-%E5%BA%94%E7%94%A8%E5%B1%82/%E8%AE%BE%E7%BD%AE/%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">网络</span></a>
+                  <a href="/categories/Android/Android-%E5%BA%94%E7%94%A8%E5%B1%82/%E8%AE%BE%E7%BD%AE/%E7%89%88%E6%9C%AC%E5%8F%B7/" itemprop="url" rel="index"><span itemprop="name">版本号</span></a>
                 </span>
             </span>
 
@@ -777,10 +759,103 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>总结下关于网络的那些事，其实我也不知道有多少，慢慢积累吧。</p>
+          <p>总结下系统版本号的相关问题</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2021/09/28/Android%E5%88%A4%E6%96%AD%E7%BD%91%E7%BB%9C%E7%B1%BB%E5%9E%8B%E5%B7%A5%E5%85%B7%E7%B1%BB/">
+              <a class="btn" href="/2021/09/28/Android%E7%B3%BB%E7%BB%9F%E7%89%88%E6%9C%AC%E5%8F%B7/">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://wxyy97.com/2021/09/08/%E8%A7%86%E9%A2%91%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%82%B9/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/wx.JPG">
+      <meta itemprop="name" content="Rain.G">
+      <meta itemprop="description" content="愿你一生努力，一生被爱">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Rain.G">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/09/08/%E8%A7%86%E9%A2%91%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%82%B9/" class="post-title-link" itemprop="url">视频基础知识点</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-09-08 21:29:28" itemprop="dateCreated datePublished" datetime="2021-09-08T21:29:28+08:00">2021-09-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-10-11 20:58:27" itemprop="dateModified" datetime="2021-10-11T20:58:27+08:00">2021-10-11</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index"><span itemprop="name">Android</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Android-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" itemprop="url" rel="index"><span itemprop="name">Android 基础知识</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Android-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E9%9F%B3%E8%A7%86%E9%A2%91%E5%9B%BE%E7%89%87%E5%BC%80%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">音视频图片开发</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/Android-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E9%9F%B3%E8%A7%86%E9%A2%91%E5%9B%BE%E7%89%87%E5%BC%80%E5%8F%91/%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">视频开发</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>这几天接触到了视频的基础知识，先做个记录。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/09/08/%E8%A7%86%E9%A2%91%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%82%B9/">
                 Read more &raquo;
               </a>
             </div>
@@ -957,7 +1032,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
           <a href="/archives">
-          <span class="site-state-item-count">38</span>
+          <span class="site-state-item-count">39</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
